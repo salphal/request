@@ -1,0 +1,36 @@
+{/* example.doc.mdx */}
+
+import {
+  Meta,
+  Title,
+  Subtitle,
+  Subheading,
+  Description,
+  Canvas,
+  Controls,
+  Anchor,
+  Primary,
+  Source,
+  Stories,
+  Unstyled
+} from '@storybook/blocks';
+
+import * as ExampleStories from "./example.stories";
+
+<Meta of={ExampleStories}/>
+
+<Title/>
+
+<Description/>
+
+<Primary/>
+
+<Controls/>
+
+<Stories/>
+
+<style>
+  {`
+
+  `}
+</style>

@@ -1,0 +1,96 @@
+{/* example.doc.mdx */}
+
+import {
+  Meta,
+  Title,
+  Subtitle,
+  Subheading,
+  Description,
+  Canvas,
+  Controls,
+  Primary,
+  Source,
+  Stories,
+  Unstyled,
+  Story,
+  ArgTypes,
+  Markdown,
+} from '@storybook/blocks';
+
+import * as ExampleStories from './example.stories';
+
+{/* 源数据 */}
+
+<Meta of={ExampleStories} />
+
+{/* 自动引入源数据中定义的 title */}
+
+<Title />
+
+{/* 子标题 */}
+
+<Subtitle>Sub Title</Subtitle>
+
+{/* 自动引入源数据中的 文档注释 */}
+
+<Description />
+
+{/* 自动引入源数据中 默认第一个 Story 作为主 Story */}
+
+<Primary />
+
+{/* 自动引入源数据中 控制器 */}
+
+<Controls exclude={[]} />
+
+{/* 自动引入源数据 所有定义的 Story */}
+
+<Stories />
+
+{/* 自动引入源数据中 类型( 对比 Controls 没有 默认值列 ) */}
+
+<ArgTypes include={['string', 'number', 'boolean']} />
+
+{/* 自定义 锚点副段落标题 */}
+
+<Subheading>Default Example</Subheading>
+
+{/* 自定义 Canvas 画布( 放大/缩小/锚点标题等功能 )包裹 Story */}
+
+<Canvas of={ExampleStories.DefaultExample} />
+
+{/* 自定义 锚点副段落标题 */}
+
+<Subheading>Another Example</Subheading>
+
+{/* 自定义 源码展示 */}
+
+<Source />
+
+{/* 自定义 Story( 选用 Canvas ) */}
+
+<Story of={ExampleStories.AnotherExample} />
+
+{/* 自定义 markdown 语法 */}
+
+<Markdown>
+  {`
+    # Header
+  `}
+</Markdown>
+
+{/* 自定义 无样式文本 */}
+
+<Unstyled>
+  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam asperiores autem exercitationem
+  facilis fuga fugiat ipsam labore laudantium nemo nobis odit placeat provident similique ullam unde
+  ut vel veritatis, voluptatum?
+</Unstyled>
+
+{/* 自定义 css 样式 */}
+
+<style>
+  {`
+
+  `}
+</style>

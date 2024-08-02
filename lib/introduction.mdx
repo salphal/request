@@ -1,0 +1,102 @@
+{/* introduction.mdx */}
+
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Introduction" />
+
+# Introduction
+
+## Storybook conf
+
+- storyboook@8.2.5
+- 主配置文件 .storybook > main.ts
+- 内容区域展示配置文件 .storybook > preview.ts
+
+## Docs
+
+### 自动生成 Doc
+
+> [example-customdocs](/docs/example-customdocs--docs)
+
+```tsx
+// *.stories.tsx
+
+const meta = {
+  tags: ['autodocs'],
+};
+```
+
+### 根据 example.stories.tsx 中的配置, 自定义 example.doc.mdx 文件
+
+> [example-autodocs](/docs/example-autodocs--docs)
+
+```mdx
+{/* example.doc.mdx */}
+
+import {
+  Meta,
+  Title,
+  Subtitle,
+  Subheading,
+  Description,
+  Canvas,
+  Controls,
+  Anchor,
+  Primary,
+  Source,
+  Stories,
+  Unstyled,
+} from '@storybook/blocks';
+
+import * as ExampleStories from './example.stories';
+
+{/* 源数据 */}
+
+<Meta of={ExampleStories} />
+
+{/* 自动引入源数据中定义的 title */}
+
+<Title />
+
+{/* 自动引入源数据中的 文档注释 */}
+
+<Description />
+
+{/* 自动引入源数据中 默认第一个 Story 作为主 Story */}
+
+<Primary />
+
+{/* 自动引入源数据中 控制器 */}
+
+<Controls />
+
+{/* 自定义 锚点副段落标题 */}
+
+<Subheading>Default Example</Subheading>
+
+{/* 自定义 Canvas 画布( 放大/缩小/锚点标题等功能 )包裹 Story */}
+
+<Canvas of={ExampleStories.DefaultExample} />
+
+{/* 自定义 锚点副段落标题 */}
+
+<Subheading>Another Example</Subheading>
+
+{/* 自定义 Canvas 画布( 放大/缩小/锚点标题等功能 )包裹 Story */}
+
+<Canvas of={ExampleStories.AnotherExample} />
+
+{/* 自定义 css 样式 */}
+
+<style>
+  {`
+
+  `}
+</style>
+```
+
+<style>
+  {`
+
+  `}
+</style>
