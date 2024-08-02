@@ -8,6 +8,9 @@ const path = require('path');
  * @param {!string} compFileName [template] - 组件文件名
  * @param {comp | custom-comp | hook} createType [comp] - 创建类型
  * @param {?string} outputPath - 输出路径( 基于 lib 为根路径 )
+ *  - comp -> /lib/components
+ *  - custom-comp -> /lib/components
+ *  - hook -> /lib/hooks
  */
 
 /** 获取启动命令的参数 */
