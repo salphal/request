@@ -55,6 +55,9 @@ devDependencies:
   '@types/node':
     specifier: ^20.10.4
     version: 20.14.13
+  '@types/react':
+    specifier: ^18.3.3
+    version: 18.3.3
   '@types/uuid':
     specifier: ^10.0.0
     version: 10.0.0
