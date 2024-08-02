@@ -1,7 +1,7 @@
 {
-  "name": "@alphal/react-hooks",
+  "name": "@alphal/request",
   "version": "0.0.1",
-  "description": "react hooks library",
+  "description": "http and socket request library",
   "author": "rayyamhk",
   "license": "MIT",
   "type": "module",
