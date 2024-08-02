@@ -1,0 +1,50 @@
+{/* socket.doc.mdx */}
+
+import {
+  Meta,
+  Title,
+  Subtitle,
+  Subheading,
+  Description,
+  Canvas,
+  Controls,
+  ArgTypes,
+  Primary,
+  Source,
+  Stories,
+  Unstyled,
+} from '@storybook/blocks';
+
+import * as SocketStories from './socket.stories';
+
+<Meta of={SocketStories} />
+
+<Title />
+
+<Description />
+
+<Primary />
+
+<Controls />
+
+<Subheading>Usage</Subheading>
+
+<Source
+  language="tsx"
+  code={`
+`}
+/>
+
+<Subheading>Default Socket</Subheading>
+
+<Canvas of={SocketStories.DefaultSocket} />
+
+<Subheading>Another Socket</Subheading>
+
+<Canvas of={SocketStories.AnotherSocket} />
+
+<style>
+  {`
+
+  `}
+</style>
