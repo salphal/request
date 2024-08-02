@@ -1,0 +1,50 @@
+{/* http.doc.mdx */}
+
+import {
+  Meta,
+  Title,
+  Subtitle,
+  Subheading,
+  Description,
+  Canvas,
+  Controls,
+  ArgTypes,
+  Primary,
+  Source,
+  Stories,
+  Unstyled,
+} from '@storybook/blocks';
+
+import * as HttpStories from './http.stories';
+
+<Meta of={HttpStories} />
+
+<Title />
+
+<Description />
+
+<Primary />
+
+<Controls />
+
+<Subheading>Usage</Subheading>
+
+<Source
+  language="tsx"
+  code={`
+`}
+/>
+
+<Subheading>Default Http</Subheading>
+
+<Canvas of={HttpStories.DefaultHttp} />
+
+<Subheading>Another Http</Subheading>
+
+<Canvas of={HttpStories.AnotherHttp} />
+
+<style>
+  {`
+
+  `}
+</style>
