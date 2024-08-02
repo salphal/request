@@ -6,7 +6,7 @@ const path = require('path');
  *
  * @param {!string} compName [Template] - 组件名
  * @param {!string} compFileName [template] - 组件文件名
- * @param {comp | custom-comp | hook} createType [comp] - 创建类型
+ * @param {comp | customComp | hook} createType [comp] - 创建类型
  * @param {?string} outputPath - 输出路径( 基于 lib 为根路径 )
  *  - comp -> /lib/components
  *  - custom-comp -> /lib/components
@@ -19,7 +19,7 @@ const args = process.argv.slice(2);
 const CreateTypes = {
   comp: 'comp',
   hook: 'hook',
-  'custom-comp': 'custom-comp',
+  customComp: 'custom-comp',
 };
 
 /**
@@ -60,7 +60,7 @@ if (createType && fs.existsSync(tempFullPath)) {
   if (typeof outputPath === 'string' && outputPath.length) {
     outputDirPath = path.resolve(__dirname, './lib' + outputPath);
   } else {
-    if ([CreateTypes.comp, CreateTypes['custom-comp']].includes(createType)) {
+    if ([CreateTypes.comp, CreateTypes.customComp].includes(createType)) {
       outputDirPath = path.resolve(__dirname, './lib/components');
     } else if (createType === CreateTypes.hook) {
       outputDirPath = path.resolve(__dirname, './lib/hooks');
