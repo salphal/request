@@ -28,7 +28,7 @@ const CreateTypes = {
  * @param[1] {string} - 组件文件名
  * @param[2] {'comp' | 'hook' | 'custom-comp'} - 创建类型
  */
-const [compName = 'template', _, createType = CreateTypes.comp, outputPath = ""] = args;
+const [compName = 'template', _, createType = CreateTypes.comp, outputPath = ''] = args;
 
 let compPath = args[1];
 
@@ -139,7 +139,7 @@ async function convertAllFiles(allFilePaths) {
   if (!isCreatedDir) return;
 
   for (let i = 0; i < allFilePaths.length; i++) {
-    const {fileName, fullPath} = allFilePaths[i];
+    const { fileName, fullPath } = allFilePaths[i];
 
     if (!fileName || !fullPath) return;
 
