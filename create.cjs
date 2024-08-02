@@ -1,6 +1,15 @@
 const fs = require('fs');
 const path = require('path');
 
+/**
+ * node create.cjs [compName] [compFileName] [createType] [outputDirPath]
+ *
+ * @param {!string} compName [Template] - 组件名
+ * @param {!string} compFileName [template] - 组件文件名
+ * @param {comp | custom-comp | hook} createType [comp] - 创建类型
+ * @param {?string} outputPath - 输出路径( 基于 lib 为根路径 )
+ */
+
 /** 获取启动命令的参数 */
 const args = process.argv.slice(2);
 
@@ -16,7 +25,7 @@ const CreateTypes = {
  * @param[1] {string} - 组件文件名
  * @param[2] {'comp' | 'hook' | 'custom-comp'} - 创建类型
  */
-const [compName = 'template', _, createType = CreateTypes.comp] = args;
+const [compName = 'template', _, createType = CreateTypes.comp, outputPath = ""] = args;
 
 let compPath = args[1];
 
@@ -45,10 +54,14 @@ const tempFullPath = path.resolve(__dirname, `${baseTempsDirPath}/__${createType
 /** 根据创建类型更新初始化配置 */
 if (createType && fs.existsSync(tempFullPath)) {
   targetTempDirPath = tempFullPath;
-  if ([CreateTypes.comp, CreateTypes['custom-comp']].includes(createType)) {
-    outputDirPath = path.resolve(__dirname, './lib/components');
-  } else if (createType === CreateTypes.hook) {
-    outputDirPath = path.resolve(__dirname, './lib/hooks');
+  if (typeof outputPath === 'string' && outputPath.length) {
+    outputDirPath = path.resolve(__dirname, './lib' + outputPath);
+  } else {
+    if ([CreateTypes.comp, CreateTypes['custom-comp']].includes(createType)) {
+      outputDirPath = path.resolve(__dirname, './lib/components');
+    } else if (createType === CreateTypes.hook) {
+      outputDirPath = path.resolve(__dirname, './lib/hooks');
+    }
   }
 } else {
   console.log(`[ Log ]: please enter createType by parameter[2]`);
@@ -123,7 +136,7 @@ async function convertAllFiles(allFilePaths) {
   if (!isCreatedDir) return;
 
   for (let i = 0; i < allFilePaths.length; i++) {
-    const { fileName, fullPath } = allFilePaths[i];
+    const {fileName, fullPath} = allFilePaths[i];
 
     if (!fileName || !fullPath) return;
 
