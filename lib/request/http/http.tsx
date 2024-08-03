@@ -6,6 +6,7 @@ import React, {
   useRef,
   useImperativeHandle,
 } from 'react';
+import { testCache } from '@lib/request/http/apis/modules/test.ts';
 
 export interface HttpProps {}
 
@@ -19,11 +20,20 @@ const Http: ForwardRefRenderFunction<HttpRef, HttpProps> = (
 
   useImperativeHandle(ref, () => ({}));
 
-  useEffect(() => {}, []);
+  const [refreshCount, setRefreshCount] = useState(0);
+
+  useEffect(() => {
+    testCache()
+      .then(res => {
+        console.log('=>(test-cache.tsx:25) testCache.res', res);
+      });
+  }, [refreshCount]);
 
   return (
     <React.Fragment>
-      <div className={''}>Http Component</div>
+      <div className={''}>
+        <button onClick={() => {setRefreshCount(p => ++p)}}>refresh</button>
+      </div>
     </React.Fragment>
   );
 };

@@ -1,8 +1,8 @@
-import { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
-import { HttpRequestConfig } from '../typings/http-request';
+import { AxiosError, type AxiosInstance, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios';
+import { type HttpRequestConfig } from '../typings/http-request';
 import { createTokenByConfig } from '../utils/token.ts';
 import CacheStorage from '../utils/cache-storage.ts';
-import { CacheData } from '../typings/cache';
+import { type CacheData } from '../typings/cache';
 
 const cacheStorage = new CacheStorage();
 

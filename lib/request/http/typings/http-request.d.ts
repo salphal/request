@@ -89,9 +89,9 @@ export interface GraphqlConfig {
 
 export interface HttpRequest extends AxiosRequestConfig {
   headers?: AxiosRequestHeaders | { [key: string]: string };
-  /** 默认值为“0”( 永不超时 ) */
+  /** 默认值为 0 ( 永不超时 ) */
   timeout?: number;
-  /** 请求/响应拦截器列表 */
+  /** 请求/响应拦 截器列表 */
   interceptorHooks?: InterceptorHooks;
 }
 

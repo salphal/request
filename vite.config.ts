@@ -15,13 +15,6 @@ export default defineConfig({
   ],
   resolve: {
     /** 路径别名 */
-    // tsconfig.json
-    // "compilerOptions": {
-    //   "paths": {
-    //     "@/*": ["./src/*"],
-    //     "@lib/*": ["./lib/*"],
-    //   }
-    // }
     alias: {
       '@': path.resolve(__dirname, 'src'),
       '@lib': path.resolve(__dirname, 'lib'),

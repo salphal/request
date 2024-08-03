@@ -3,10 +3,17 @@ import {
   type HttpRequestConfig,
   type InterceptorHook,
   type InterceptorHookFunc,
-  type InterceptorHooks,
+  type InterceptorHooks
 } from '../typings/http-request';
 import { contentTypes } from '../constants/content-types.ts';
 import { getCache } from '../interceptors/cache.ts';
+
+
+export interface RequestInstance {
+  request: (config: any) => Promise<any>;
+}
+
+export type CreateInstance = (config: any) => RequestInstance;
 
 /**
  * https://axios-http.com/zh/docs/post_example
@@ -20,7 +27,7 @@ class HttpRequest {
   /**
    * axios实例
    */
-  instance: AxiosInstance;
+  instance: RequestInstance;
   /**
    * 请求/响应拦截器列表
    */
@@ -28,9 +35,9 @@ class HttpRequest {
 
   /**
    * @param config {HttpRequestConfig} - 请求配置参数
-   * @param createInstance {(config: any) => Instance} - 创建实例的方法
+   * @param createInstance {(config: any) => Instance} - 创建请求实例的方法
    */
-  constructor(config: HttpRequestConfig = {}, createInstance: any) {
+  constructor(config: HttpRequestConfig = {}, createInstance: CreateInstance) {
     if (typeof createInstance !== 'function') {
       throw new Error('Please check request parameter');
     }
@@ -41,7 +48,8 @@ class HttpRequest {
       cacheType: 'localStorage',
       cacheName: 'requestCacheStorage',
 
-      setLoading: () => {},
+      setLoading: () => {
+      },
       ignoreLoading: false,
       loadingType: 'single',
 
@@ -52,12 +60,14 @@ class HttpRequest {
       retryCount: 0,
       retryMaxCount: 3,
 
-      ...config,
+      ...config
     };
 
+    /** 创建请求实例 */
     this.instance = createInstance(this.config);
-    // this.instance = axios.create(this.config);
+    /** 设置拦截器列表 */
     this.interceptorHooks = config.interceptorHooks || [];
+    /** 装载拦截器 */
     this.setupInterceptor();
   }
 
@@ -68,17 +78,17 @@ class HttpRequest {
         return Promise.resolve({
           status: 200,
           config,
-          ...data,
+          ...data
         });
     }
     return new Promise((resolve, reject) => {
       try {
         this.instance
-          .request<any, T>(config)
+          .request(config)
           .then((res: T) => {
             resolve(res);
           })
-          .catch((err: AxiosError) => {
+          .catch((err: any) => {
             reject(err);
           });
       } catch (err) {
@@ -115,7 +125,7 @@ class HttpRequest {
     const data = {
       query,
       operationName,
-      variables,
+      variables
     };
     const graphqlUrl = typeof graphqlBaseUrl === 'string' ? baseURL + graphqlBaseUrl : baseURL;
     return this.request({ method: 'POST', baseURL: graphqlUrl, data, ...restProps });
@@ -132,13 +142,27 @@ class HttpRequest {
       method: 'POST',
       data: formData,
       headers: {
-        'Content-Type': contentTypes.formData,
-      },
+        'Content-Type': contentTypes.formData
+      }
     };
     return this.request(newConfig);
   }
 
   setupInterceptor(): void {
+
+    const requestInterceptorList = [
+      {
+        onFulfilled(config: any) {
+          return config;
+        },
+        onRejected(error: any) {
+        }
+      }
+    ];
+
+    const responseInterceptorList = [];
+
+
     // if (!Array.isArray(this.interceptorHooks) || !this.interceptorHooks.length) return;
     // /**
     //  * https://axios-http.com/docs/interceptors

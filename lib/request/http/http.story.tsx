@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Http, { type HttpProps } from './http';
+import { testCache } from '@lib/request/http/apis/modules/test.ts';
 
 export interface HttpStoryProps {}
 

@@ -1,11 +1,11 @@
 import axios, {
   AxiosError,
-  AxiosInstance,
-  AxiosResponse,
-  Canceler,
-  InternalAxiosRequestConfig,
+  type AxiosInstance,
+  type AxiosResponse,
+  type Canceler,
+  type InternalAxiosRequestConfig,
 } from 'axios';
-import { HttpRequestConfig } from '../typings/http-request';
+import { type HttpRequestConfig } from '../typings/http-request';
 import { createTokenByConfig } from '../utils/token.ts';
 
 const requestQueue: Map<string, Canceler> = new Map();

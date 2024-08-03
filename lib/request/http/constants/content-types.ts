@@ -1,5 +1,5 @@
 /**
- * Data type enumeration in request header
+ * 请求头中的数据类型枚举
  */
 export const contentTypes = {
   json: 'application/json',
