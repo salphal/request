@@ -1,18 +1,12 @@
-import axios, { AxiosError, type AxiosInstance } from 'axios';
 import {
+  type CreateInstance,
   type HttpRequestConfig,
-  type InterceptorHook,
-  type InterceptorHookFunc,
-  type InterceptorHooks,
+  type RequestInstance,
+  type RequestInterceptor,
+  type ResponseInterceptor,
 } from '../typings/http-request';
 import { contentTypes } from '../constants/content-types.ts';
 import { getCache } from '../interceptors/cache.ts';
-
-export interface RequestInstance {
-  request: (config: any) => Promise<any>;
-}
-
-export type CreateInstance = (config: any) => RequestInstance;
 
 /**
  * https://axios-http.com/zh/docs/post_example
@@ -30,7 +24,13 @@ class HttpRequest {
   /**
    * 请求/响应拦截器列表
    */
-  interceptorHooks: InterceptorHooks;
+  // interceptorHooks: InterceptorHooks;
+
+  /** 请求拦截器列表*/
+  requestInterceptorList: Array<RequestInterceptor> = [];
+
+  /** 响应拦截器列表 */
+  responseInterceptorList: Array<ResponseInterceptor> = [];
 
   /**
    * @param config {HttpRequestConfig} - 请求配置参数
@@ -63,8 +63,11 @@ class HttpRequest {
 
     /** 创建请求实例 */
     this.instance = createInstance(this.config);
+    this.config = config;
     /** 设置拦截器列表 */
-    this.interceptorHooks = config.interceptorHooks || [];
+    // this.interceptorHooks = config.interceptorHooks || [];
+    this.requestInterceptorList = config.requestInterceptorList || [];
+    this.responseInterceptorList = config.responseInterceptorList || [];
     /** 装载拦截器 */
     this.setupInterceptor();
   }
@@ -96,19 +99,19 @@ class HttpRequest {
   }
 
   post<T = any>(config: HttpRequestConfig): Promise<T> {
-    return this.request({ ...config, method: 'POST' });
+    return this.request({ ...this.config, ...config, method: 'POST' });
   }
 
   delete<T = any>(config: HttpRequestConfig): Promise<T> {
-    return this.request({ ...config, method: 'DELETE' });
+    return this.request({ ...this.config, ...config, method: 'DELETE' });
   }
 
   patch<T = any>(config: HttpRequestConfig): Promise<T> {
-    return this.request({ ...config, method: 'PATCH' });
+    return this.request({ ...this.config, ...config, method: 'PATCH' });
   }
 
   get<T = any>(config: HttpRequestConfig): Promise<T> {
-    return this.request({ ...config, method: 'GET' });
+    return this.request({ ...this.config, ...config, method: 'GET' });
   }
 
   graphql<T = any>(config: HttpRequestConfig): Promise<T> {
@@ -135,6 +138,7 @@ class HttpRequest {
       formData.append(key, data[key]);
     });
     const newConfig: HttpRequestConfig = {
+      ...this.config,
       ...config,
       url,
       method: 'POST',
@@ -147,39 +151,38 @@ class HttpRequest {
   }
 
   setupInterceptor(): void {
-    const requestInterceptorList = [
-      {
-        onFulfilled(config: any) {
-          return config;
-        },
-        onRejected(error: any) {},
-      },
-    ];
+    /** 挂载请求拦截器 */
+    if (Array.isArray(this.requestInterceptorList) && this.requestInterceptorList.length) {
+      this.instance.setupRequestInterceptors(this.instance, this.requestInterceptorList);
+    }
 
-    const responseInterceptorList = [];
+    /** 挂载响应拦截器 */
+    if (Array.isArray(this.responseInterceptorList) && this.responseInterceptorList.length) {
+      this.instance.setupResponseInterceptors(this.instance, this.responseInterceptorList);
+    }
 
-    // if (!Array.isArray(this.interceptorHooks) || !this.interceptorHooks.length) return;
-    // /**
-    //  * https://axios-http.com/docs/interceptors
-    //  */
-    // this.interceptorHooks.forEach((interceptorHook: InterceptorHook | InterceptorHookFunc) => {
-    //   /** 装载自定义拦截器 */
-    //   if (typeof interceptorHook === 'function') {
-    //     interceptorHook(this.instance);
-    //   } else {
-    //     // 请求拦截( 先定义后生效 )
-    //     this.instance.interceptors.request.use(
-    //       // @ts-ignore
-    //       interceptorHook?.requestInterceptor,
-    //       interceptorHook?.requestInterceptorCatch,
-    //     );
-    //     // 响应拦截( 执行顺序与定义顺序一致 )
-    //     this.instance.interceptors.response.use(
-    //       interceptorHook?.responseInterceptor,
-    //       interceptorHook?.responseInterceptorCatch,
-    //     );
-    //   }
-    // });
+    //   if (!Array.isArray(this.interceptorHooks) || !this.interceptorHooks.length) return;
+    //   /**
+    //    * https://axios-http.com/docs/interceptors
+    //    */
+    //   this.interceptorHooks.forEach((interceptorHook: InterceptorHook | InterceptorHookFunc) => {
+    //     /** 装载自定义拦截器 */
+    //     if (typeof interceptorHook === 'function') {
+    //       interceptorHook(this.instance);
+    //     } else {
+    //       // 请求拦截( 先定义后生效 )
+    //       this.instance.interceptors.request.use(
+    //         // @ts-ignore
+    //         interceptorHook?.requestInterceptor,
+    //         interceptorHook?.requestInterceptorCatch,
+    //       );
+    //       // 响应拦截( 执行顺序与定义顺序一致 )
+    //       this.instance.interceptors.response.use(
+    //         interceptorHook?.responseInterceptor,
+    //         interceptorHook?.responseInterceptorCatch,
+    //       );
+    //     }
+    //   });
   }
 }
 

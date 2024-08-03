@@ -93,6 +93,12 @@ export interface HttpRequest extends AxiosRequestConfig {
   timeout?: number;
   /** 请求/响应拦 截器列表 */
   interceptorHooks?: InterceptorHooks;
+
+  /** 请求拦截器列表 */
+  requestInterceptorList?: RequestInterceptor[];
+
+  /** 响应拦截器列表 */
+  responseInterceptorList?: ResponseInterceptor[];
 }
 
 export type HttpRequestConfig = CacheInterceptorConfig &
@@ -101,3 +107,50 @@ export type HttpRequestConfig = CacheInterceptorConfig &
   RetryInterceptorConfig &
   GraphqlConfig &
   HttpRequest;
+
+export interface RequestInstance {
+  [key: string]: any;
+
+  /** 发起请求的方法 */
+  request: (config: any) => Promise<any>;
+  /** 挂载请求拦截器的方法 */
+  setupRequestInterceptors: (
+    requestInstance: RequestInstance,
+    requestInterceptorList: RequestInterceptor[],
+  ) => void;
+  /** 挂载响应拦截器的方法 */
+  setupResponseInterceptors: (
+    requestInstance: RequestInstance,
+    responseInterceptorList: ResponseInterceptor[],
+  ) => void;
+}
+
+export type CreateInstance = (config: any) => RequestInstance;
+
+/** 请求拦截 */
+export type RequestOnFulfilled = (config: HttpRequestConfig) => HttpRequestConfig;
+/** 请求拦截错误捕获 */
+export type RequestOnRejected = (error: any) => void;
+/** 请求拦截器 */
+export type RequestInterceptor = [RequestOnFulfilled, RequestOnRejected];
+
+/** 响应拦截 */
+export type ResponseOnFulfilled = (config: HttpRequestConfig) => HttpRequestConfig;
+/** 响应拦截错误捕获 */
+export type ResponseOnRejected = (error: any) => void;
+/** 响应拦截器 */
+export type ResponseInterceptor = [ResponseOnFulfilled, ResponseOnRejected];
+
+// export interface RequestInterceptor {
+//   /** Promise.resolve */
+//   onFulfilled: (config: HttpRequestConfig) => HttpRequestConfig;
+//   /** Promise.reject */
+//   onRejected: (error: any) => void;
+// }
+
+// export interface ResponseInterceptor {
+//   /** Promise.resolve */
+//   onFulfilled: (config: HttpRequestConfig) => HttpRequestConfig;
+//   /** Promise.reject */
+//   onRejected: (error: any) => void;
+// }
