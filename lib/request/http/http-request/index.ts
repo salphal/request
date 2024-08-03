@@ -3,11 +3,10 @@ import {
   type HttpRequestConfig,
   type InterceptorHook,
   type InterceptorHookFunc,
-  type InterceptorHooks
+  type InterceptorHooks,
 } from '../typings/http-request';
 import { contentTypes } from '../constants/content-types.ts';
 import { getCache } from '../interceptors/cache.ts';
-
 
 export interface RequestInstance {
   request: (config: any) => Promise<any>;
@@ -48,8 +47,7 @@ class HttpRequest {
       cacheType: 'localStorage',
       cacheName: 'requestCacheStorage',
 
-      setLoading: () => {
-      },
+      setLoading: () => {},
       ignoreLoading: false,
       loadingType: 'single',
 
@@ -60,7 +58,7 @@ class HttpRequest {
       retryCount: 0,
       retryMaxCount: 3,
 
-      ...config
+      ...config,
     };
 
     /** 创建请求实例 */
@@ -78,7 +76,7 @@ class HttpRequest {
         return Promise.resolve({
           status: 200,
           config,
-          ...data
+          ...data,
         });
     }
     return new Promise((resolve, reject) => {
@@ -125,7 +123,7 @@ class HttpRequest {
     const data = {
       query,
       operationName,
-      variables
+      variables,
     };
     const graphqlUrl = typeof graphqlBaseUrl === 'string' ? baseURL + graphqlBaseUrl : baseURL;
     return this.request({ method: 'POST', baseURL: graphqlUrl, data, ...restProps });
@@ -142,26 +140,23 @@ class HttpRequest {
       method: 'POST',
       data: formData,
       headers: {
-        'Content-Type': contentTypes.formData
-      }
+        'Content-Type': contentTypes.formData,
+      },
     };
     return this.request(newConfig);
   }
 
   setupInterceptor(): void {
-
     const requestInterceptorList = [
       {
         onFulfilled(config: any) {
           return config;
         },
-        onRejected(error: any) {
-        }
-      }
+        onRejected(error: any) {},
+      },
     ];
 
     const responseInterceptorList = [];
-
 
     // if (!Array.isArray(this.interceptorHooks) || !this.interceptorHooks.length) return;
     // /**

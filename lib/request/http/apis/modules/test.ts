@@ -1,6 +1,5 @@
-import httpRequest from "../request.ts";
+import httpRequest from '../request.ts';
 import type { HttpRequestConfig } from '@lib/request/http/typings/http-request';
-
 
 const testBaseUrl = '/request';
 
@@ -11,7 +10,7 @@ export const testCache = async (config: HttpRequestConfig = {}) => {
   return httpRequest.get({
     url: `${testBaseUrl}/test_cache`,
     cacheAble: true,
-    ...config
+    ...config,
   });
 };
 
@@ -21,7 +20,7 @@ export const testCache = async (config: HttpRequestConfig = {}) => {
 export const testLoading = async (config: HttpRequestConfig = {}) => {
   return httpRequest.get({
     url: `${testBaseUrl}/test_loading`,
-    ...config
+    ...config,
   });
 };
 
@@ -33,7 +32,7 @@ export const testPending = async (config: HttpRequestConfig = {}) => {
     url: `${testBaseUrl}/test_pending`,
     abortAble: true,
     retryAble: false,
-    ...config
+    ...config,
   });
 };
 
@@ -45,6 +44,6 @@ export const testRetry = async (config: HttpRequestConfig = {}) => {
     url: `${testBaseUrl}/test_retry`,
     abortAble: false,
     retryAble: true,
-    ...config
+    ...config,
   });
 };

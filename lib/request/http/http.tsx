@@ -23,16 +23,21 @@ const Http: ForwardRefRenderFunction<HttpRef, HttpProps> = (
   const [refreshCount, setRefreshCount] = useState(0);
 
   useEffect(() => {
-    testCache()
-      .then(res => {
-        console.log('=>(test-cache.tsx:25) testCache.res', res);
-      });
+    testCache().then((res) => {
+      console.log('=>(test-cache.tsx:25) testCache.res', res);
+    });
   }, [refreshCount]);
 
   return (
     <React.Fragment>
       <div className={''}>
-        <button onClick={() => {setRefreshCount(p => ++p)}}>refresh</button>
+        <button
+          onClick={() => {
+            setRefreshCount((p) => ++p);
+          }}
+        >
+          refresh
+        </button>
       </div>
     </React.Fragment>
   );
