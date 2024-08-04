@@ -1,92 +1,111 @@
-import {
-  type CreateInstance,
-  type HttpRequestConfig,
-  type RequestInstance,
-  type RequestInterceptor,
-  type ResponseInterceptor,
-} from '../typings/http-request';
-import { contentTypes } from '../constants/content-types.ts';
-import { getCache } from '../interceptors/cache.ts';
+export interface HttpResponse<T> {
+  [key: string]: any;
 
-/**
- * https://axios-http.com/zh/docs/post_example
- */
+  code: number;
+  data: T;
+  message: string;
+}
 
-class HttpRequest {
-  /**
-   * 请求配置对象
-   */
-  config: HttpRequestConfig;
-  /**
-   * axios实例
-   */
-  instance: RequestInstance;
-  /**
-   * 请求/响应拦截器列表
-   */
-  // interceptorHooks: InterceptorHooks;
+export type RequestOnFulfilled = (config: HttpRequestConfig) => HttpRequestConfig;
+export type RequestOnRejected = (error: any) => void;
+export type RequestInterceptors = [RequestOnFulfilled, RequestOnRejected];
 
-  /** 请求拦截器列表*/
-  requestInterceptorList: Array<RequestInterceptor> = [];
+export type ResponseOnFulfilled = <T = any>(res: HttpResponse<T>) => HttpResponse<T>;
+export type ResponseOnRejected = (error: any) => void;
+export type ResponseInterceptors = [ResponseOnFulfilled, ResponseOnRejected];
 
+export type RequestInterceptorList = Array<RequestInterceptors>;
+export type ResponseInterceptorList = Array<ResponseInterceptors>;
+
+export interface LoadingInterceptorConfig {
+  /** 设置加载的方法 */
+  setLoading?: (loading: boolean) => any;
+  /** 是否不使用 loading( 批量请求时使用，某个请求忽略loading ) */
+  ignoreLoading?: boolean;
+  /** 加载类型: 单个请求 |多个请求 */
+  loadingType?: 'single' | 'multi';
+}
+
+export interface PendingInterceptorConfig {
+  /** 是否启用重复请求自动取消 */
+  abortAble?: boolean;
+}
+
+export interface HttpRequestBaseConfig {
+  [key: string]: any;
+
+  /** 请求头 */
+  headers?: { [key: string]: any };
+  /** 请求拦截器列表 */
+  requestInterceptorList?: RequestInterceptorList;
+  /** 挂载请求拦截器列表的方法( 必须实现 ) */
+  setupRequestInterceptors?: (
+    instance: HttpRequestInstance,
+    requestInterceptorList: RequestInterceptorList,
+    config: HttpRequestConfig,
+  ) => void;
   /** 响应拦截器列表 */
-  responseInterceptorList: Array<ResponseInterceptor> = [];
+  responseInterceptorList?: ResponseInterceptorList;
+  /** 挂载响应拦截器列表的方法( 必须实现 ) */
+  setupResponseInterceptors?: (
+    instance: HttpRequestInstance,
+    responseInterceptorList: ResponseInterceptorList,
+    config: HttpRequestConfig,
+  ) => void;
+}
 
-  /**
-   * @param config {HttpRequestConfig} - 请求配置参数
-   * @param createInstance {(config: any) => Instance} - 创建请求实例的方法
-   */
-  constructor(config: HttpRequestConfig = {}, createInstance: CreateInstance) {
-    if (typeof createInstance !== 'function') {
-      throw new Error('Please check request parameter');
-    }
+export type HttpRequestConfig = HttpRequestBaseConfig &
+  LoadingInterceptorConfig &
+  PendingInterceptorConfig;
 
+export interface HttpRequestInstance {
+  [key: string]: any;
+
+  request: <T>(config: HttpRequestConfig) => Promise<T>;
+}
+
+export type CreateInstance = (config: HttpRequestConfig) => HttpRequestInstance;
+
+class HttpBaseRequest {
+  config: HttpRequestConfig;
+  instance: HttpRequestInstance;
+
+  constructor(createInstance: CreateInstance, config: HttpRequestConfig) {
+    /** 保存请求配置对象 */
     this.config = {
-      cacheAble: false,
-      cacheDuration: 86400 * 3,
-      cacheType: 'localStorage',
-      cacheName: 'requestCacheStorage',
+      // cacheAble: false,
+      // cacheDuration: 86400 * 3,
+      // cacheType: 'localStorage',
+      // cacheName: 'requestCacheStorage',
 
-      setLoading: () => {},
+      setLoading: (loading) => loading,
       ignoreLoading: false,
       loadingType: 'single',
 
       abortAble: false,
 
-      retryAble: false,
-      retryDelay: 1000,
-      retryCount: 0,
-      retryMaxCount: 3,
+      // retryAble: false,
+      // retryDelay: 1000,
+      // retryCount: 0,
+      // retryMaxCount: 3,
 
       ...config,
     };
 
     /** 创建请求实例 */
-    this.instance = createInstance(this.config);
-    this.config = config;
-    /** 设置拦截器列表 */
-    // this.interceptorHooks = config.interceptorHooks || [];
-    this.requestInterceptorList = config.requestInterceptorList || [];
-    this.responseInterceptorList = config.responseInterceptorList || [];
-    /** 装载拦截器 */
-    this.setupInterceptor();
+    this.instance = createInstance(config);
+    /** 开始装载拦截器 */
+    this.setupInterceptors();
   }
 
+  /** 默认请求方法 */
   request<T = any>(config: HttpRequestConfig): Promise<T> {
-    if (config.cacheAble) {
-      const data: T = getCache(config);
-      if (data)
-        return Promise.resolve({
-          status: 200,
-          config,
-          ...data,
-        });
-    }
     return new Promise((resolve, reject) => {
       try {
         this.instance
-          .request(config)
-          .then((res: T) => {
+          .request({ ...this.config, ...config })
+          .then((res: any) => {
+            console.log('=>(index.ts:103) res222', res);
             resolve(res);
           })
           .catch((err: any) => {
@@ -98,12 +117,42 @@ class HttpRequest {
     });
   }
 
+  /** 装载拦截器 */
+  setupInterceptors() {
+    if (
+      this.config.requestInterceptorList?.length &&
+      typeof this.config.setupRequestInterceptors === 'function'
+    ) {
+      this.config.setupRequestInterceptors(
+        this.instance,
+        this.config.requestInterceptorList,
+        this.config,
+      );
+    }
+    if (
+      this.config.responseInterceptorList?.length &&
+      typeof this.config.setupResponseInterceptors === 'function'
+    ) {
+      this.config.setupResponseInterceptors(
+        this.instance,
+        this.config.responseInterceptorList,
+        this.config,
+      );
+    }
+  }
+}
+
+class HttpRequest extends HttpBaseRequest {
   post<T = any>(config: HttpRequestConfig): Promise<T> {
     return this.request({ ...this.config, ...config, method: 'POST' });
   }
 
   delete<T = any>(config: HttpRequestConfig): Promise<T> {
     return this.request({ ...this.config, ...config, method: 'DELETE' });
+  }
+
+  put<T = any>(config: HttpRequestConfig): Promise<T> {
+    return this.request({ ...this.config, ...config, method: 'PUT' });
   }
 
   patch<T = any>(config: HttpRequestConfig): Promise<T> {
@@ -129,7 +178,13 @@ class HttpRequest {
       variables,
     };
     const graphqlUrl = typeof graphqlBaseUrl === 'string' ? baseURL + graphqlBaseUrl : baseURL;
-    return this.request({ method: 'POST', baseURL: graphqlUrl, data, ...restProps });
+    return this.request({
+      ...this.config,
+      method: 'POST',
+      baseURL: graphqlUrl,
+      data,
+      ...restProps,
+    });
   }
 
   upload<T = any>(url: string, data: any, config?: HttpRequestConfig): Promise<T> {
@@ -144,46 +199,11 @@ class HttpRequest {
       method: 'POST',
       data: formData,
       headers: {
-        'Content-Type': contentTypes.formData,
+        'Content-Type': 'multipart/form-data',
       },
     };
     return this.request(newConfig);
   }
-
-  setupInterceptor(): void {
-    /** 挂载请求拦截器 */
-    if (Array.isArray(this.requestInterceptorList) && this.requestInterceptorList.length) {
-      this.instance.setupRequestInterceptors(this.instance, this.requestInterceptorList);
-    }
-
-    /** 挂载响应拦截器 */
-    if (Array.isArray(this.responseInterceptorList) && this.responseInterceptorList.length) {
-      this.instance.setupResponseInterceptors(this.instance, this.responseInterceptorList);
-    }
-
-    //   if (!Array.isArray(this.interceptorHooks) || !this.interceptorHooks.length) return;
-    //   /**
-    //    * https://axios-http.com/docs/interceptors
-    //    */
-    //   this.interceptorHooks.forEach((interceptorHook: InterceptorHook | InterceptorHookFunc) => {
-    //     /** 装载自定义拦截器 */
-    //     if (typeof interceptorHook === 'function') {
-    //       interceptorHook(this.instance);
-    //     } else {
-    //       // 请求拦截( 先定义后生效 )
-    //       this.instance.interceptors.request.use(
-    //         // @ts-ignore
-    //         interceptorHook?.requestInterceptor,
-    //         interceptorHook?.requestInterceptorCatch,
-    //       );
-    //       // 响应拦截( 执行顺序与定义顺序一致 )
-    //       this.instance.interceptors.response.use(
-    //         interceptorHook?.responseInterceptor,
-    //         interceptorHook?.responseInterceptorCatch,
-    //       );
-    //     }
-    //   });
-  }
 }
 
-export default HttpRequest;
+export { HttpBaseRequest, HttpRequest };

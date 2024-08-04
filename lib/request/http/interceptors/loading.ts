@@ -1,21 +1,19 @@
-import type { HttpRequestConfig, InterceptorHookFunc } from '../typings/http-request';
-import {
-  AxiosError,
-  type AxiosInstance,
-  type AxiosResponse,
-  type InternalAxiosRequestConfig,
-} from 'axios';
+import type {
+  HttpRequestConfig,
+  RequestInterceptors,
+  ResponseInterceptors,
+} from '@lib/request/http/http-request';
 
-/** The number of requests in the batch that are still in progress */
+/** 批次中仍在处理中的请求数 */
 let requestCount = 0;
 
 const START_DELAY_TIME = 100;
 const END_DELAY_TIME = 100;
 
 /**
- * Update loading status
- * @param config {HttpRequestConfig} - Request configuration object
- * @param loading - Loading status
+ * 更新加载状态
+ * @param config {HttpRequestConfig} - 请求配置对象
+ * @param loading - 加载状态
  */
 const updateRequestLoading = (config: HttpRequestConfig, loading: boolean) => {
   if (!config) return;
@@ -25,13 +23,14 @@ const updateRequestLoading = (config: HttpRequestConfig, loading: boolean) => {
 };
 
 /**
- * When starting a request, update the loading state
- * @param config {HttpRequestConfig} - Request configuration object
+ * 启动请求时，更新加载状态
+ * @param config {HttpRequestConfig} - 请求配置对象
  */
 export const startRequest = (config: HttpRequestConfig) => {
   if (!config) return;
+  /** 处理批量请求中 忽略loading 的请求 */
   if (config && config.ignoreLoading) return;
-  /** Terminating duplicate requests and batch request loading cannot be used at the same time. */
+  /** 终止重复请求和批量请求加载不能同时使用 */
   if (config && config.abortAble) return;
   if (config.loadingType === 'single') {
     updateRequestLoading(config, true);
@@ -39,8 +38,8 @@ export const startRequest = (config: HttpRequestConfig) => {
   }
   requestCount += 1;
   /**
-   * If the request has not ended after it is started, loading will begin
-   * Avoid fast-responding requests from triggering loading
+   * 如果请求启动后还没有结束，就会开始加载
+   * 避免快速响应请求触发加载
    */
   setTimeout(() => {
     if (requestCount > 0) {
@@ -51,8 +50,8 @@ export const startRequest = (config: HttpRequestConfig) => {
 };
 
 /**
- * End the request, determine whether there are any outstanding requests, and then update the loading status
- * @param config {HttpRequestConfig} - Request configuration object
+ * 结束请求，判断是否还有未完成的请求，然后更新加载状态s
+ * @param config {HttpRequestConfig} - 请求配置对象
  */
 export const endRequest = (config: HttpRequestConfig) => {
   if (config && config.ignoreLoading) return;
@@ -62,8 +61,8 @@ export const endRequest = (config: HttpRequestConfig) => {
   }
   requestCount -= 1;
   /**
-   * After responding, if there are still unfinished requests, continue to wait.
-   * Wait for all requests to respond before updating the loading status
+   * 响应后，如果还有未完成的请求，则继续等待
+   * 等待所有请求响应后再更新加载状态
    */
   setTimeout(() => {
     if (requestCount === 0) {
@@ -72,30 +71,20 @@ export const endRequest = (config: HttpRequestConfig) => {
   }, END_DELAY_TIME);
 };
 
-/**
- * Loading interceptor for loading control
- * @param instance {AxiosInstance} - axios instance
- */
-const setUpLoadingInterceptor: InterceptorHookFunc = (instance: AxiosInstance) => {
-  instance.interceptors.request.use(
-    (config: InternalAxiosRequestConfig<any>) => {
-      startRequest(config);
-      return config;
-    },
-    (err: AxiosError) => {
-      return Promise.reject(err);
-    },
-  );
-  instance.interceptors.response.use(
-    (res: AxiosResponse) => {
-      endRequest(res.config);
-      return res;
-    },
-    (err: AxiosError) => {
-      endRequest(err.config as HttpRequestConfig);
-      return Promise.reject(err);
-    },
-  );
-};
+export const loadingRequestInterceptors: RequestInterceptors = [
+  (config) => {
+    startRequest(config);
+    return config;
+  },
+  (err: any) => {},
+];
 
-export default setUpLoadingInterceptor;
+export const loadingResponseInterceptors: ResponseInterceptors = [
+  (res) => {
+    endRequest(res);
+    return res;
+  },
+  (err: any) => {
+    err.setLoading(false);
+  },
+];
