@@ -150,6 +150,11 @@ export interface IHttpRequest {
 
 export interface HttpRequestInstance {
   [key: string]: any;
+  config: HttpRequestConfig;
+  instance: HttpRequestInstance;
+  cacheStore: CacheStore | null;
+  request: <T>(config: HttpRequestConfig) => Promise<T>;
+  setupInterceptors: () => void;
 }
 
 export type CreateInstance = (config: HttpRequestConfig) => HttpRequestInstance;
