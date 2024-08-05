@@ -16,9 +16,21 @@ const TestPending: React.FC<TestPendingProps> = (props: TestPendingProps & TestP
   const navigate = useNavigate();
 
   useEffect(() => {
-    testPending();
-    testPending();
-    testPending();
+    testPending()
+      .then((res) => {
+        console.log('=>(test-pending.tsx:24) res', res);
+      })
+      .catch((err) => {});
+    testPending()
+      .then((res) => {
+        console.log('=>(test-pending.tsx:24) res', res);
+      })
+      .catch((err) => {});
+    testPending()
+      .then((res) => {
+        console.log('=>(test-pending.tsx:24) res', res);
+      })
+      .catch((err) => {});
   }, []);
 
   const buttonOnClick = (path: string) => {

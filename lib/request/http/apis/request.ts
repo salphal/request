@@ -1,8 +1,4 @@
-import {
-  type HttpRequestInstance,
-  type HttpRequestConfig,
-  HttpRequest,
-} from '@lib/request/http/http-request';
+import { HttpRequest } from '@lib/request/http/http-request';
 import axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios';
 import {
   loadingRequestInterceptors,
@@ -13,6 +9,8 @@ import {
   pendingResponseInterceptors,
 } from '@lib/request/http/interceptors/pending.ts';
 import { retryResponseInterceptors } from '@lib/request/http/interceptors/retry.ts';
+import type { HttpRequestConfig, HttpRequestInstance } from '@lib/request/http/types/http-request';
+import MapStore from '@lib/request/http/utils/cache-store/map-store.ts';
 
 const httpRequest = new HttpRequest(
   // 创建请求实例的方法
@@ -30,6 +28,10 @@ const httpRequest = new HttpRequest(
   {
     // 请求基础路径
     baseURL: '/api',
+    /** 创建缓存数据仓库 */
+    createCacheStore: () => {
+      return new MapStore();
+    },
     // 请求拦截器列表
     requestInterceptorList: [
       pendingRequestInterceptors, // 重复请求请求拦截器

@@ -1,6 +1,9 @@
 import { createTokenByConfig } from '@lib/request/http/utils/token.ts';
-import type { HttpRequestConfig } from '@lib/request/http/http-request';
-import type { RequestInterceptors, ResponseInterceptors } from '@lib/request/http/http-request';
+import type {
+  HttpRequestConfig,
+  RequestInterceptors,
+  ResponseInterceptors,
+} from '@lib/request/http/types/http-request';
 
 /** 存储请求中的请求 */
 const requestQueue: Map<string, any> = new Map();

@@ -1,5 +1,9 @@
-import type { HttpRequestConfig, HttpRequestInstance } from '@lib/request/http/http-request';
-import type { RequestInterceptors, ResponseInterceptors } from '@lib/request/http/http-request';
+import type {
+  HttpRequestConfig,
+  HttpRequestInstance,
+  RequestInterceptors,
+  ResponseInterceptors,
+} from '@lib/request/http/types/http-request';
 
 const retryRequest = (err: any, instance: HttpRequestInstance) => {
   const config = (err.config as HttpRequestConfig) || {};

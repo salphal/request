@@ -2,7 +2,7 @@ import type {
   HttpRequestConfig,
   RequestInterceptors,
   ResponseInterceptors,
-} from '@lib/request/http/http-request';
+} from '@lib/request/http/types/http-request';
 
 /** 批次中仍在处理中的请求数 */
 let requestCount = 0;

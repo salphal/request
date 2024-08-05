@@ -16,9 +16,13 @@ const TestCache: React.FC<TestCacheProps> = (props: TestCacheProps & TestCacheMe
   const navigate = useNavigate();
 
   useEffect(() => {
-    testCache().then((res) => {
-      console.log('=>(test-cache.tsx:25) testCache.res', res);
-    });
+    testCache()
+      .then((res) => {
+        console.log('=>(test-cache.tsx:25) testCache.res', res);
+      })
+      .catch((err) => {
+        console.log('=>(test-cache.tsx:26) err', err);
+      });
   }, []);
 
   const buttonOnClick = (path: string) => {

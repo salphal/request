@@ -1,35 +1,40 @@
 import { createTokenByConfig } from '../utils/token.ts';
-import CacheStorage, { type CacheData } from '../utils/cache-storage.ts';
-import type { HttpRequestConfig, HttpResponse } from '@lib/request/http/http-request';
-import type { RequestInterceptors, ResponseInterceptors } from '@lib/request/http/http-request';
+import type {
+  HttpRequestConfig,
+  HttpRequestInstance,
+  HttpResponse,
+  RequestInterceptors,
+  ResponseInterceptors,
+} from '@lib/request/http/types/http-request';
+import type { CacheData } from '@lib/request/http/types/cache-store';
 
-const cacheStorage = new CacheStorage();
-
-export const addCache = (res: HttpResponse<any>) => {
+export const addCache = (res: HttpResponse<any>, instance: HttpRequestInstance) => {
   const config: HttpRequestConfig = res.config;
   const data = res.data;
   if (!data) return;
 
   if (config.cacheAble === true) {
-    const expires = config.cacheDuration || 86400 * 3;
+    const validityPeriod = config.validityPeriod || 86400 * 3;
     const token = createTokenByConfig(config);
 
     if (!token) return;
 
     const value: CacheData = {
       data,
-      expires: expires,
+      validityPeriod,
       startTime: new Date().getTime(),
     };
 
-    cacheStorage.set(token, value);
+    if (instance.cacheStore && typeof instance.cacheStore.setCache === 'function') {
+      instance.cacheStore.setCache(token, value);
+    }
   }
 };
 
 export const getCache = (config: HttpRequestConfig) => {
   const token = createTokenByConfig(config);
   if (!token) return;
-  return cacheStorage.get(token);
+  // return cacheStorage.get(token);
 };
 
 export const cacheRequestInterceptors: RequestInterceptors = [
@@ -42,8 +47,8 @@ export const cacheRequestInterceptors: RequestInterceptors = [
 ];
 
 export const cacheResponseInterceptors: ResponseInterceptors = [
-  (res) => {
-    addCache(res);
+  (res, config, instance) => {
+    addCache(res, instance);
     return res;
   },
   (err: any) => {
