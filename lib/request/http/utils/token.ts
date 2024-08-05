@@ -1,4 +1,4 @@
-import type { HttpRequestConfig } from '@lib/request/http/http-request';
+import type { HttpRequestConfig } from '@lib/request/http/types/http-request';
 
 /**
  * Create unique token based on method, url, data, params, headers

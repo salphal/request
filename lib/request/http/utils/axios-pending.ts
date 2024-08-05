@@ -1,5 +1,5 @@
-import type { HttpRequestConfig } from '@lib/request/http/http-request';
 import axios, { type Canceler } from 'axios';
+import type { HttpRequestConfig } from '@lib/request/http/types/http-request';
 
 export const axiosCancelCallback = (
   config: HttpRequestConfig,

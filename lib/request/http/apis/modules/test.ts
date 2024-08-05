@@ -1,5 +1,5 @@
 import httpRequest from '../request.ts';
-import type { HttpRequestConfig } from '@lib/request/http/http-request';
+import type { HttpRequestConfig } from '@lib/request/http/types/http-request';
 
 const testBaseUrl = '/request';
 
