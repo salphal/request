@@ -1,10 +1,18 @@
 import type { Preview } from '@storybook/react';
 import '../lib/global.css';
+import { withConsole } from '@storybook/addon-console';
+import { setConsoleOptions } from '@storybook/addon-console';
+
+const panelExclude = setConsoleOptions({}).panelExclude;
+setConsoleOptions({
+  panelExclude: [...panelExclude, /deprecated/],
+});
 
 /**
  * 内容展示区全局配置
  */
 const preview: Preview = {
+  decorators: [(storyFn, context) => withConsole()(storyFn)(context)],
   parameters: {
     actions: {
       // argTypesRegex: '^on[A-Z].*'
