@@ -6,7 +6,7 @@ import React, {
   useRef,
   useImperativeHandle,
 } from 'react';
-import { testRequest } from '@lib/request/http/apis/modules/test.ts';
+import { testLoading, testPending, testRetry } from '@lib/request/http/apis/modules/test.ts';
 
 export interface HttpProps {}
 
@@ -24,7 +24,21 @@ const Http: ForwardRefRenderFunction<HttpRef, HttpProps> = (
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    testRequest({ setLoading: updateLoading });
+    testLoading({ setLoading: updateLoading });
+
+    // testPending()
+    //   .then((res) => {
+    //     console.log('=>(http.tsx:34) res', res);
+    //   })
+    //   .catch((err) => {
+    //     console.log('=>(http.tsx:36) err', err);
+    //   })
+    //   .finally(() => {});
+
+    // testPending();
+    // testPending();
+
+    testRetry();
   }, [refreshCount]);
 
   const updateLoading = (loading: boolean) => {
