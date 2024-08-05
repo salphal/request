@@ -73,6 +73,6 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false
   },
-  "include": ["./lib/**/*.ts", "./lib/**/*.tsx"],
+  "include": ["./lib/**/*.ts", "./lib/**/*.tsx", "./src/**/*.ts","./src/**/*.tsx"],
   "exclude": ["./lib/**/*.stories.*"]
 }

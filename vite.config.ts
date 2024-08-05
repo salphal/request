@@ -9,10 +9,15 @@ import { peerDependencies } from './package.json';
 import * as path from 'path';
 
 export default defineConfig({
-  plugins: [
-    react(),
-    dts({ rollupTypes: true }), // Output .d.ts files
-  ],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://mock.alphal.cn:9526/mock/6697261f88d70100625a837d',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
+  },
   resolve: {
     /** 路径别名 */
     alias: {
@@ -20,6 +25,10 @@ export default defineConfig({
       '@lib': path.resolve(__dirname, 'lib'),
     },
   },
+  plugins: [
+    react(),
+    dts({ rollupTypes: true }), // Output .d.ts files
+  ],
   build: {
     target: 'esnext',
     minify: false,
