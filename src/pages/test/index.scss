@@ -1,0 +1,16 @@
+.wrap {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+.content {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.button:not(:last-child) {
+  margin-right: 8px;
+}
