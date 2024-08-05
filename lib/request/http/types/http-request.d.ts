@@ -137,7 +137,7 @@ export interface IHttpBaseRequest {
   setupInterceptors: () => void;
 }
 
-export interface IHttpRequest {
+export interface IHttpRequest extends IHttpBaseRequest {
   [key: string]: any;
   post: <T>(config: HttpRequestConfig) => Promise<T>;
   delete: <T>(config: HttpRequestConfig) => Promise<T>;
