@@ -7,11 +7,11 @@ class LocalstorageStore implements CacheStore {
     const value = this.store.getItem(key);
     return value ? JSON.parse(value) : null;
   }
-  setCache(key: string, value: any): void {
+  addCache(key: string, value: any): void {
     this.store.setItem(key, JSON.stringify(value));
   }
 
-  remoteCache(key: string) {
+  removeCache(key: string) {
     this.store.removeItem(key);
   }
 

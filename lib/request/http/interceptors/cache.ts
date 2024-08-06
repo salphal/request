@@ -21,6 +21,7 @@ export const addCache = (res: HttpResponse<any>, instance: HttpRequestInstance) 
 
     const value: CacheData = {
       data,
+      token,
       validityPeriod,
       startTime: new Date().getTime(),
     };

@@ -4,10 +4,14 @@ import { CacheStore } from '@lib/request/http/types/cache-store';
 export interface HttpResponse<T> {
   [key: string]: any;
 
+  /** 响应状态码 */
   code: number;
+  /** 响应数据 */
   data: T;
+  /** 响应消息 */
   message: string;
 
+  /** 请求配置对象 */
   config: HttpRequestConfig;
 }
 
@@ -62,7 +66,7 @@ export interface LoadingInterceptorConfig {
 
 export interface PendingInterceptorConfig {
   [key: string]: any;
-
+  /** 用于取消请求的标识 */
   cancelToken?: any;
   signal?: any;
   /** 是否启用重复请求自动取消 */
@@ -101,7 +105,6 @@ export interface CacheInterceptorConfig {
 
 export interface HttpRequestBaseConfig {
   [key: string]: any;
-
   /** 请求头 */
   headers?: { [key: string]: any };
   /** 请求拦截器列表 */
@@ -130,10 +133,15 @@ export type HttpRequestConfig = HttpRequestBaseConfig &
 
 export interface IHttpBaseRequest {
   [key: string]: any;
+  /** 请求配置对象 */
   config: HttpRequestConfig;
+  /** 自定义请求实例 */
   instance: HttpRequestInstance;
+  /** 缓存数据的仓库 */
   cacheStore: CacheStore | null;
+  /** 请求方法 */
   request: <T>(config: HttpRequestConfig) => Promise<T>;
+  /** 挂载拦截器的方法 */
   setupInterceptors: () => void;
 }
 
@@ -150,6 +158,7 @@ export interface IHttpRequest extends IHttpBaseRequest {
 
 export interface HttpRequestInstance {
   [key: string]: any;
+  request: <T>(config: HttpRequestConfig) => Promise<T>;
 }
 
 export type CreateInstance = (config: HttpRequestConfig) => HttpRequestInstance;

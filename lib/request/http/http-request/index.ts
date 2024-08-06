@@ -103,23 +103,23 @@ class HttpBaseRequest implements IHttpBaseRequest {
 
 class HttpRequest extends HttpBaseRequest implements IHttpRequest {
   post<T = any>(config: HttpRequestConfig): Promise<T> {
-    return this.request({ ...this.config, ...config, method: 'POST' });
+    return this.request({ ...config, method: 'POST' });
   }
 
   delete<T = any>(config: HttpRequestConfig): Promise<T> {
-    return this.request({ ...this.config, ...config, method: 'DELETE' });
+    return this.request({ ...config, method: 'DELETE' });
   }
 
   put<T = any>(config: HttpRequestConfig): Promise<T> {
-    return this.request({ ...this.config, ...config, method: 'PUT' });
+    return this.request({ ...config, method: 'PUT' });
   }
 
   patch<T = any>(config: HttpRequestConfig): Promise<T> {
-    return this.request({ ...this.config, ...config, method: 'PATCH' });
+    return this.request({ ...config, method: 'PATCH' });
   }
 
   get<T = any>(config: HttpRequestConfig): Promise<T> {
-    return this.request({ ...this.config, ...config, method: 'GET' });
+    return this.request({ ...config, method: 'GET' });
   }
 
   graphql<T = any>(config: HttpRequestConfig): Promise<T> {

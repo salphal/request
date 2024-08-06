@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './index.scss';
+import { TsIndexDB } from '@lib/request/http/utils/indexdb';
+import IndexDBStore from '@lib/request/http/utils/cache-store/indexdb-store';
 
 export interface TestProps {
   [key: string]: any;
@@ -13,7 +15,24 @@ export interface TestMethods {
 const Test: React.FC<TestProps> = (props: TestProps & TestMethods) => {
   const navigate = useNavigate();
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const db = new IndexDBStore();
+
+    db.addCache({
+      token: 'token',
+      startTime: new Date().getTime(),
+      validityPeriod: 1000,
+      data: {},
+    });
+
+    db.getCache('token').then((res) => {
+      console.log('=>(test.tsx:34) res', res);
+    });
+
+    // db.removeCache('token').then((res) => {
+    //   console.log('=>(test.tsx:35) res', res);
+    // });
+  }, []);
 
   const [refreshCount, setRefreshCount] = useState(0);
 
