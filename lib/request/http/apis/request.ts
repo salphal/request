@@ -11,6 +11,7 @@ import {
 import { retryResponseInterceptors } from '@lib/request/http/interceptors/retry.ts';
 import type { HttpRequestConfig, HttpRequestInstance } from '@lib/request/http/types/http-request';
 import MapStore from '@lib/request/http/utils/cache-store/map-store.ts';
+import { cacheResponseInterceptors } from '@lib/request/http/interceptors/cache.ts';
 
 const httpRequest = new HttpRequest(
   // 创建请求实例的方法
@@ -50,6 +51,7 @@ const httpRequest = new HttpRequest(
       pendingResponseInterceptors, // 重复请求响应拦截器
       loadingResponseInterceptors, // loading 响应拦截器
       retryResponseInterceptors, // 重试错误请求( 默认重试3次 )
+      cacheResponseInterceptors,
       [
         (res) => {
           return res;
@@ -134,6 +136,7 @@ const httpRequest = new HttpRequest(
         requestQueue.set(token, source.cancel);
       }
     },
+    beforeRequest(config: HttpRequestConfig) {},
   },
 );
 

@@ -16,19 +16,19 @@ const Test: React.FC<TestProps> = (props: TestProps & TestMethods) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const db = new IndexDBStore();
-
-    db.addCache({
-      token: 'token',
-      startTime: new Date().getTime(),
-      validityPeriod: 1000,
-      data: {},
-    });
-
-    db.getCache('token').then((res) => {
-      console.log('=>(test.tsx:34) res', res);
-    });
-
+    // const db = new IndexDBStore();
+    //
+    // db.addCache({
+    //   token: 'token',
+    //   startTime: new Date().getTime(),
+    //   validityPeriod: 1000,
+    //   data: {},
+    // });
+    //
+    // db.getCache('token').then((res) => {
+    //   console.log('=>(test.tsx:34) res', res);
+    // });
+    //
     // db.removeCache('token').then((res) => {
     //   console.log('=>(test.tsx:35) res', res);
     // });

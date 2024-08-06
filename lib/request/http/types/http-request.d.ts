@@ -123,6 +123,10 @@ export interface HttpRequestBaseConfig {
     responseInterceptorList: ResponseInterceptorList,
     config: HttpRequestConfig,
   ) => void;
+  /** 请求适配器( 根据不同环境使用不同 API 发起请求 ) */
+  requestAdapter?: (config: HttpRequestConfig) => any;
+  /** request 请求之前触发的勾子 */
+  beforeRequest?: (config: HttpRequestConfig) => any;
 }
 
 export type HttpRequestConfig = HttpRequestBaseConfig &

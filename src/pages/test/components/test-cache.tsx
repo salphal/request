@@ -21,7 +21,7 @@ const TestCache: React.FC<TestCacheProps> = (props: TestCacheProps & TestCacheMe
         console.log('=>(test-cache.tsx:25) testCache.res', res);
       })
       .catch((err) => {
-        console.log('=>(test-cache.tsx:26) err', err);
+        console.log('=>(test-cache.tsx:26) testCache.err', err);
       });
   }, []);
 

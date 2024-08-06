@@ -52,27 +52,43 @@ class HttpBaseRequest implements IHttpBaseRequest {
 
   /** 默认请求方法 */
   request<T = any>(config: HttpRequestConfig): Promise<T> {
-    if (config.cacheAble && this.cacheStore) {
-      const token = createTokenByConfig(config);
-      if (!token && typeof token === 'string') {
-        const cachetData: CacheData = this.cacheStore.getCache(token);
-        const currentDate = new Date().getTime();
-      }
+    // if (config.cacheAble && this.cacheStore) {
+    //   const token = createTokenByConfig(config);
+    //   const cachetData: CacheData = token ? this.cacheStore.getCache(token) : null;
+    //   if (token && cachetData) {
+    //     const currentDate = new Date().getTime();
+    //     if (
+    //       cachetData.startTime &&
+    //       cachetData.validityPeriod &&
+    //       currentDate - cachetData.startTime > cachetData.validityPeriod
+    //     ) {
+    //       this.cacheStore.removeCache(token);
+    //     } else {
+    //       // @ts-ignore
+    //       return Promise.resolve({ data: cachetData.data });
+    //     }
+    //   }
+    // }
+    if (typeof config.beforeRequest === 'function') {
+      const result = config.beforeRequest(config);
+      if (!result) return Promise.resolve(result as T);
     }
-    return new Promise((resolve, reject) => {
-      try {
-        this.instance
-          .request({ ...this.config, ...config })
-          .then((res: any) => {
-            resolve(res);
-          })
-          .catch((err: any) => {
-            reject(err);
-          });
-      } catch (err) {
-        console.log(`request err: ${err}`);
-      }
-    });
+    return typeof config.requestAdapter === 'function'
+      ? config.requestAdapter(config)
+      : new Promise((resolve, reject) => {
+          try {
+            this.instance
+              .request({ ...this.config, ...config })
+              .then((res: any) => {
+                resolve(res);
+              })
+              .catch((err: any) => {
+                reject(err);
+              });
+          } catch (err) {
+            console.log(`request err: ${err}`);
+          }
+        });
   }
 
   /** 装载拦截器 */
