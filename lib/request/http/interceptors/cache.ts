@@ -28,7 +28,7 @@ export const addCache = (res: any, instance: AxiosInstance) => {
     };
 
     if (config.cacheStore && typeof config.cacheStore.addCache === 'function') {
-      config.cacheStore.addCache(value);
+      config.cacheStore.addCache(token, value);
     }
   }
 };

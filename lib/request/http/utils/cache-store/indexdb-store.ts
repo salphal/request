@@ -48,10 +48,10 @@ class IndexDBStore implements CacheStore {
     });
     this.store.openDB();
   }
-  async addCache(value: any) {
+  async addCache(key: string, value: any) {
     return await this.store.insert({
       tableName: this.tableName,
-      data: value,
+      data: { token: key, ...value },
     });
   }
 
