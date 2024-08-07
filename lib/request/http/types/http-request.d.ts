@@ -1,57 +1,132 @@
-import { CacheType } from '@lib/request/http/utils/cache-storage.ts';
 import { CacheStore } from '@lib/request/http/types/cache-store';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { AxiosInstance } from 'axios/index';
 
-export interface HttpResponse<T> {
-  [key: string]: any;
-
-  /** 响应状态码 */
-  code: number;
-  /** 响应数据 */
-  data: T;
-  /** 响应消息 */
-  message: string;
-
-  /** 请求配置对象 */
-  config: HttpRequestConfig;
-}
-
-export type RequestOnFulfilled = (
-  config: HttpRequestConfig,
-  httpRequestConfig: HttpRequestConfig,
-  instance: HttpRequestInstance,
-) => HttpRequestConfig | Promise<HttpRequestConfig>;
-export type RequestOnRejected = (
-  error: any,
-  config: HttpRequestConfig,
-  instance: HttpRequestInstance,
-) => void;
-export type RequestInterceptors = [RequestOnFulfilled, RequestOnRejected];
-
-export type ResponseOnFulfilled = <T = any>(
-  res: HttpResponse<T>,
-  config: HttpRequestConfig,
-  instance: HttpRequestInstance,
-) => HttpResponse<T> | Promise<HttpRequestConfig>;
-export type ResponseOnRejected = (
-  error: any,
-  config: HttpRequestConfig,
-  instance: HttpRequestInstance,
-) => void;
-export type ResponseInterceptors = [ResponseOnFulfilled, ResponseOnRejected];
+export type RequestInterceptors<C, I> = [
+  onFulfilled?: (config: C, instance: I) => C | Promise<C>,
+  onRejected?: (err: any, config: C, instance: I) => any,
+];
 
 export type RequestInterceptorList = Array<RequestInterceptors>;
-export type ResponseInterceptorList = Array<ResponseInterceptors>;
 
-export interface GraphqlConfig {
-  /** graphql 请求路径前缀 */
-  graphqlBaseUrl?: string;
-  /** graphql 语句名  */
-  operationName?: string;
-  /** graphql 语句 */
-  query?: string;
-  /** 参数集合 */
-  variables?: any;
+export type ResponseInterceptors<R, C, I> = [
+  onFulfilled?: (res: R, config: C, instance: I) => R | Promise<V>,
+  onRejected?: (err: any, config: C, instance: I) => any,
+];
+
+export type ResponseInterceptorList = Array<RequestInterceptors>;
+
+export interface IBaseRequest<T, C> {
+  /** 自定义请求实例 */
+  instance: T;
+  /** 请求配置对象 */
+  config: C;
+  /** 缓存数据的仓库 */
+  cacheStore?: CacheStore | null;
+
+  /** 请求拦截器列表 */
+  requestInterceptorList?: RequestInterceptorList;
+  /** 响应拦截器列表 */
+  responseInterceptorList?: ResponseInterceptorList;
+
+  /** request 请求之前触发的勾子 */
+  beforeRequest?: (config: C) => any;
+
+  /** 请求方法 */
+  // request: <T>(config: C) => Promise<T>;
+  request<T = any, R = IHttpResponse<T>, D = any>(config: IBaseRequestConfig<D>): Promise<R>;
+
+  /** 请求适配器( 根据不同环境使用不同 API 发起请求 ) */
+  requestAdapter?: (config: C) => any;
+
+  /** 挂载请求拦截器列表的方法( 必须实现 ) */
+  setupRequestInterceptors: () => void;
+  /** 挂载响应拦截器列表的方法( 必须实现 ) */
+  setupResponseInterceptors: () => void;
 }
+
+export interface IBaseRequestData {
+  [key: string]: any;
+}
+
+export interface IHttpRequestInstance extends AxiosInstance {
+  cacheStore: CacheStore;
+}
+
+export interface IBaseRequestCreateConfig extends AxiosRequestConfig<IBaseRequestData> {
+  /** 请求拦截器列表 */
+  requestInterceptorList: any[];
+  /** 响应拦截器列表 */
+  responseInterceptorList: any[];
+  /** 缓存数据的仓库 */
+  cacheStore: CacheStore;
+}
+
+export interface IBaseRequestConfig<D = any> extends AxiosRequestConfig<IBaseRequestData> {
+  /** 请求拦截器列表 */
+  requestInterceptorList?: any[];
+  /** 响应拦截器列表 */
+  responseInterceptorList?: any[];
+  /** Get请求时携带的路径参数对象 */
+  params?: D;
+}
+
+export interface IGraphqlData<D> {
+  /** graphql 语句 */
+  query: string;
+  /** graphql 语句名称 */
+  operationName?: string;
+  /** graphql 的参数对象 */
+  variables: D;
+}
+
+export interface IHttpRequest<C> {
+  request: <T>(config: C) => Promise<T>;
+
+  get<T = any, R = IHttpResponse<T>, P = any>(
+    url: string,
+    params?: P,
+    config?: IBaseRequestConfig<P>,
+  ): Promise<R>;
+
+  delete<T = any, R = IHttpResponse<T>, P = any>(
+    url: string,
+    params?: P,
+    config?: IBaseRequestConfig<P>,
+  ): Promise<R>;
+
+  post<T = any, R = IHttpResponse<T>, D = any>(
+    url: string,
+    data?: D,
+    config?: IBaseRequestConfig<D>,
+  ): Promise<R>;
+
+  put<T = any, R = IHttpResponse<T>, D = any>(
+    url: string,
+    data?: D,
+    config?: IBaseRequestConfig<D>,
+  ): Promise<R>;
+
+  patch<T = any, R = IHttpResponse<T>, D = any>(
+    url: string,
+    data?: D,
+    config?: IBaseRequestConfig<D>,
+  ): Promise<R>;
+
+  graphql<T = any, R = IHttpResponse<T>, D = any>(
+    url: string,
+    data?: IGraphqlData<D>,
+    config?: IBaseRequestConfig<D>,
+  ): Promise<R>;
+
+  upload<T = any, R = IHttpResponse<T>, D = any>(
+    url: string,
+    data?: D,
+    config?: IBaseRequestConfig<D>,
+  ): Promise<R>;
+}
+
+export interface IHttpResponse<T> extends AxiosResponse {}
 
 export interface LoadingInterceptorConfig {
   /** 当前 loading 的状态 */
@@ -103,66 +178,8 @@ export interface CacheInterceptorConfig {
   validityPeriod?: number;
 }
 
-export interface HttpRequestBaseConfig {
-  [key: string]: any;
-  /** 请求头 */
-  headers?: { [key: string]: any };
-  /** 请求拦截器列表 */
-  requestInterceptorList?: RequestInterceptorList;
-  /** 挂载请求拦截器列表的方法( 必须实现 ) */
-  setupRequestInterceptors?: (
-    instance: HttpRequestInstance,
-    requestInterceptorList: RequestInterceptorList,
-    config: HttpRequestConfig,
-  ) => void;
-  /** 响应拦截器列表 */
-  responseInterceptorList?: ResponseInterceptorList;
-  /** 挂载响应拦截器列表的方法( 必须实现 ) */
-  setupResponseInterceptors?: (
-    instance: HttpRequestInstance,
-    responseInterceptorList: ResponseInterceptorList,
-    config: HttpRequestConfig,
-  ) => void;
-  /** 请求适配器( 根据不同环境使用不同 API 发起请求 ) */
-  requestAdapter?: (config: HttpRequestConfig) => any;
-  /** request 请求之前触发的勾子 */
-  beforeRequest?: (config: HttpRequestConfig) => any;
-}
-
-export type HttpRequestConfig = HttpRequestBaseConfig &
+export type IHttpRequestConfig = IBaseRequestCreateConfig &
   LoadingInterceptorConfig &
   PendingInterceptorConfig &
   RetryInterceptorConfig &
   CacheInterceptorConfig;
-
-export interface IHttpBaseRequest {
-  [key: string]: any;
-  /** 请求配置对象 */
-  config: HttpRequestConfig;
-  /** 自定义请求实例 */
-  instance: HttpRequestInstance;
-  /** 缓存数据的仓库 */
-  cacheStore: CacheStore | null;
-  /** 请求方法 */
-  request: <T>(config: HttpRequestConfig) => Promise<T>;
-  /** 挂载拦截器的方法 */
-  setupInterceptors: () => void;
-}
-
-export interface IHttpRequest extends IHttpBaseRequest {
-  [key: string]: any;
-  post: <T>(config: HttpRequestConfig) => Promise<T>;
-  delete: <T>(config: HttpRequestConfig) => Promise<T>;
-  put: <T>(config: HttpRequestConfig) => Promise<T>;
-  patch: <T>(config: HttpRequestConfig) => Promise<T>;
-  get: <T>(config: HttpRequestConfig) => Promise<T>;
-  graphql: <T>(config: HttpRequestConfig) => Promise<T>;
-  upload: <T>(url: string, data: any, config?: HttpRequestConfig) => Promise<T>;
-}
-
-export interface HttpRequestInstance {
-  [key: string]: any;
-  request: <T>(config: HttpRequestConfig) => Promise<T>;
-}
-
-export type CreateInstance = (config: HttpRequestConfig) => HttpRequestInstance;
