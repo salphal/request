@@ -18,21 +18,21 @@ const TestLoading: React.FC<TestLoadingProps> = (props: TestLoadingProps & TestL
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    testLoading({
+    testLoading(null, {
       setLoading: updateLoading,
     })
       .then((res) => {
         console.log('=>(test-loading.tsx:28) res1', res);
       })
       .catch((err) => {});
-    testLoading({
+    testLoading(null, {
       setLoading: updateLoading,
     })
       .then((res) => {
         console.log('=>(test-loading.tsx:28) res2', res);
       })
       .catch((err) => {});
-    testLoading({
+    testLoading(null, {
       setLoading: updateLoading,
     })
       .then((res) => {
@@ -42,7 +42,7 @@ const TestLoading: React.FC<TestLoadingProps> = (props: TestLoadingProps & TestL
   }, []);
 
   const updateLoading = (loading: boolean) => {
-    console.log('=>(test-loading.tsx:41) updateLoading', loading);
+    console.log('=>(test-loading.tsx:47) test.updateLoading', loading);
     setLoading(loading);
   };
 

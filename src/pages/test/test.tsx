@@ -16,22 +16,25 @@ const Test: React.FC<TestProps> = (props: TestProps & TestMethods) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log(1111);
     // const db = new IndexDBStore();
-    //
     // db.addCache({
-    //   token: 'token',
+    //   token: 'get&/request/test_cache',
     //   startTime: new Date().getTime(),
     //   validityPeriod: 1000,
-    //   data: {},
+    //   data: {
+    //     data: {},
+    //   },
+    // }).then((res) => {
+    //   console.log('=>(test.tsx:30) addCache.res', res);
     // });
-    //
     // db.getCache('token').then((res) => {
-    //   console.log('=>(test.tsx:34) res', res);
+    //   console.log('=>(test.tsx:34) getCache.res', res);
     // });
-    //
-    // db.removeCache('token').then((res) => {
-    //   console.log('=>(test.tsx:35) res', res);
-    // });
+    // // db.removeCache('token').then((res) => {
+    // //   console.log('=>(test.tsx:35) res', res);
+    // // });
+    // console.log(222);
   }, []);
 
   const [refreshCount, setRefreshCount] = useState(0);
