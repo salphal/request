@@ -13,7 +13,7 @@ export interface CacheStore<T = any> {
   /** 获取缓存 */
   getCache: (key: string) => T;
   /** 添加缓存 */
-  addCache: (value: T) => void;
+  addCache: (key: string, value: T) => void;
   /** 删除缓存 */
   removeCache: (key: string) => viod;
   /** 清空所有缓存 */

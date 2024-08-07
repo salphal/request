@@ -1,6 +1,5 @@
 import { CacheStore } from '@lib/request/http/types/cache-store';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { AxiosInstance } from 'axios/index';
 
 export type RequestInterceptors<C, I> = [
   onFulfilled?: (config: C, instance: I) => C | Promise<C>,
@@ -33,7 +32,6 @@ export interface IBaseRequest<T, C> {
   beforeRequest?: (config: C) => any;
 
   /** 请求方法 */
-  // request: <T>(config: C) => Promise<T>;
   request<T = any, R = IHttpResponse<T>, D = any>(config: IBaseRequestConfig<D>): Promise<R>;
 
   /** 请求适配器( 根据不同环境使用不同 API 发起请求 ) */
