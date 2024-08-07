@@ -1,15 +1,16 @@
 import { createTokenByConfig } from '../utils/token.ts';
+import type { CacheData } from '@lib/request/http/types/cache-store';
 import type {
-  HttpRequestConfig,
-  HttpRequestInstance,
-  HttpResponse,
+  IHttpRequestConfig,
+  IHttpResponse,
   RequestInterceptors,
   ResponseInterceptors,
 } from '@lib/request/http/types/http-request';
-import type { CacheData } from '@lib/request/http/types/cache-store';
+import type { AxiosInstance } from 'axios';
 
-export const addCache = (res: HttpResponse<any>, instance: HttpRequestInstance) => {
-  const config: HttpRequestConfig = res.config;
+export const addCache = (res: any, instance: AxiosInstance) => {
+  const config = (res.config as IHttpRequestConfig) || {};
+
   const data = res.data;
   if (!data) return;
 
@@ -26,33 +27,37 @@ export const addCache = (res: HttpResponse<any>, instance: HttpRequestInstance) 
       startTime: new Date().getTime(),
     };
 
-    if (instance.cacheStore && typeof instance.cacheStore.setCache === 'function') {
-      instance.cacheStore.setCache(token, value);
+    if (config.cacheStore && typeof config.cacheStore.addCache === 'function') {
+      config.cacheStore.addCache(value);
     }
   }
 };
 
-export const getCache = (config: HttpRequestConfig) => {
+export const getCache = (config: IHttpRequestConfig) => {
   const token = createTokenByConfig(config);
   if (!token) return;
   // return cacheStorage.get(token);
 };
 
-export const cacheRequestInterceptors: RequestInterceptors = [
+export const cacheRequestInterceptors: RequestInterceptors<IHttpRequestConfig, AxiosInstance> = [
   (config) => {
     return config;
   },
-  (err: any) => {
+  (err, config, instance) => {
     return Promise.reject(err);
   },
 ];
 
-export const cacheResponseInterceptors: ResponseInterceptors = [
+export const cacheResponseInterceptors: ResponseInterceptors<
+  IHttpResponse<any>,
+  IHttpRequestConfig,
+  AxiosInstance
+> = [
   (res, config, instance) => {
-    addCache(res, instance);
+    if (res && res.config) addCache(res, instance);
     return res;
   },
-  (err: any) => {
+  (err: any, config, instance) => {
     return Promise.reject(err);
   },
 ];

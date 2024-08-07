@@ -1,22 +1,23 @@
+import type { IHttpRequestConfig } from '@lib/request/http/types/http-request';
+import type { AxiosInstance } from 'axios';
 import type {
-  HttpRequestConfig,
-  HttpRequestInstance,
+  IHttpResponse,
   RequestInterceptors,
   ResponseInterceptors,
 } from '@lib/request/http/types/http-request';
 
-const retryRequest = (err: any, instance: HttpRequestInstance) => {
-  const config = (err.config as HttpRequestConfig) || {};
+const retryRequest = (err: any, instance: AxiosInstance) => {
+  const config = (err.config as IHttpRequestConfig) || {};
 
-  if (config['retryAble'] === false) return Promise.reject(err);
+  if (config.retryAble === false) return Promise.reject(err);
   if (typeof config['retryCount'] !== 'number' || typeof config['retryMaxCount'] !== 'number')
     return Promise.reject(err);
 
   /** 重试指定次数后返回异常 */
-  if (config['retryCount'] >= config['retryMaxCount']) return Promise.reject(err);
+  if (config.retryCount >= config.retryMaxCount) return Promise.reject(err);
 
   /** 记录重试次数 */
-  config['retryCount'] += 1;
+  config.retryCount += 1;
 
   const delay = new Promise<void>((resolve) => {
     console.log(
@@ -32,17 +33,21 @@ const retryRequest = (err: any, instance: HttpRequestInstance) => {
   });
 };
 
-export const retryRequestInterceptors: RequestInterceptors = [
+export const retryRequestInterceptors: RequestInterceptors<IHttpRequestConfig, AxiosInstance> = [
   (config) => {
     return config;
   },
-  (err: any) => {
+  (err, config, instance) => {
     return Promise.reject(err);
   },
 ];
 
-export const retryResponseInterceptors: ResponseInterceptors = [
-  (res) => {
+export const retryResponseInterceptors: ResponseInterceptors<
+  IHttpResponse<any>,
+  IHttpRequestConfig,
+  AxiosInstance
+> = [
+  (res, config, instance) => {
     return res;
   },
   (err: any, config, instance) => {
