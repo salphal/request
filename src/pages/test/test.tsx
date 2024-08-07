@@ -16,7 +16,7 @@ const Test: React.FC<TestProps> = (props: TestProps & TestMethods) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(1111);
+    // console.log(1111);
     // const db = new IndexDBStore();
     // db.addCache({
     //   token: 'get&/request/test_cache',

@@ -1,4 +1,4 @@
-import type { CacheData, CacheStore } from '@lib/request/http/types/cache-store';
+import type { CacheStore } from '@lib/request/http/types/cache-store';
 import { type DBTables, TsIndexDB } from '@lib/request/http/utils/indexdb';
 
 export interface IndexDBStormProps {
@@ -26,16 +26,16 @@ class IndexDBStore implements CacheStore {
             // autoIncrement: true,
           },
           indexs: [
-            // {
-            //   key: 'id',
-            //   options: {
-            //     unique: true,
-            //   },
-            // },
+            {
+              key: 'id',
+              options: {
+                unique: true,
+              },
+            },
             {
               key: 'token',
               options: {
-                // unique: true,
+                unique: true,
               },
             },
             {
@@ -48,6 +48,7 @@ class IndexDBStore implements CacheStore {
     });
     this.store.openDB();
   }
+
   async addCache(key: string, value: any) {
     return await this.store.insert({
       tableName: this.tableName,

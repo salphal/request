@@ -48,12 +48,14 @@ class HttpBaseRequest implements IBaseRequest<AxiosInstance, IBaseRequestConfig>
    * @param config {IBaseRequestConfig} - 请求配置对象
    */
   beforeRequest(config: IBaseRequestConfig): any {
-    return { response: {}, hasResponse: 200 };
+    return { cacheData: {}, status: 200, hasCache: false };
   }
 
-  request<T = any, R = IHttpResponse<T>, D = any>(config: IBaseRequestConfig<D>): Promise<R> {
-    const { response, hasResponse } = this.beforeRequest({ ...this.config, ...config });
-    if (hasResponse) return Promise.resolve(response);
+  async request<T = any, R = IHttpResponse<T>, D = any>(config: IBaseRequestConfig<D>): Promise<R> {
+    const { hasCache, ...cacheData } = await this.beforeRequest({ ...this.config, ...config });
+    if (hasCache) {
+      return Promise.resolve(cacheData);
+    }
     return new Promise((resolve, reject) => {
       try {
         this.instance
@@ -157,18 +159,31 @@ class HttpRequest extends HttpBaseRequest implements IHttpRequest<IHttpRequestCo
     if (config.cacheAble && this.cacheStore) {
       const token = createTokenByConfig(config);
       if (token) {
-        const cacheData: CacheData = await config.cacheStore.getCache(token);
-        console.log('=>(index.ts:149) cacheData', cacheData);
+        const [cacheData] = await config.cacheStore.getCache(token);
         if (cacheData) {
-          const { startTime, validityPeriod, data } = cacheData;
-          return {
-            response: data,
-            status: true,
-          };
+          if (cacheData) {
+            const currentDate = new Date().getTime();
+            /** 判断缓存数据是否还在有效期 */
+            if (
+              cacheData.startTime &&
+              cacheData.validityPeriod &&
+              currentDate - cacheData.startTime > cacheData.validityPeriod
+            ) {
+              return {
+                data: cacheData.data || {},
+                status: 200,
+                hasCache: true,
+                config,
+              };
+            } else {
+              /** 移除不在有效期的数据 */
+              config.cacheStore.removeCache(token);
+            }
+          }
         }
       }
     }
-    return { response: { foo: 'bar' }, status: false };
+    return { data: null, hasCache: false };
   }
 
   get<T = any, R = IHttpResponse<T>, P = any>(
