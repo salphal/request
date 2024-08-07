@@ -1,8 +1,8 @@
 import axios, { type Canceler } from 'axios';
-import type { HttpRequestConfig } from '@lib/request/http/types/http-request';
+import type { IHttpRequestConfig } from '@lib/request/http/types/http-request';
 
 export const axiosCancelCallback = (
-  config: HttpRequestConfig,
+  config: IHttpRequestConfig,
   requestQueue: Map<string, Canceler>,
   token: string,
 ) => {

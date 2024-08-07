@@ -22,20 +22,20 @@ class IndexDBStore implements CacheStore {
         {
           tableName: this.tableName,
           options: {
-            keyPath: 'id',
-            autoIncrement: true,
+            keyPath: 'token',
+            // autoIncrement: true,
           },
           indexs: [
-            {
-              key: 'id',
-              options: {
-                unique: true,
-              },
-            },
+            // {
+            //   key: 'id',
+            //   options: {
+            //     unique: true,
+            //   },
+            // },
             {
               key: 'token',
               options: {
-                unique: true,
+                // unique: true,
               },
             },
             {

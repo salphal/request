@@ -15,7 +15,7 @@ export type DBTables = {
   tableName: string;
   /**
    * @param options {IDBObjectStoreParameters} - 列表配置
-   *  @property keyPath {string} - 设置主键
+   *  @property keyPath {string} - IndexedDB 将以此路径作为键
    *  @property autoIncrement {boolean} - 是否自增
    */
   options?: IDBObjectStoreParameters;

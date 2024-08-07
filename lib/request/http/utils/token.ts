@@ -1,10 +1,10 @@
-import type { HttpRequestConfig } from '@lib/request/http/types/http-request';
+import type { IHttpRequestConfig } from '@lib/request/http/types/http-request';
 
 /**
  * Create unique token based on method, url, data, params, headers
  * @param config {HttpRequestConfig} - Request configuration object
  */
-export const createTokenByConfig = (config: HttpRequestConfig): string | null => {
+export const createTokenByConfig = (config: IHttpRequestConfig): string | null => {
   if (!config) return null;
 
   const { method, url, data, params, headers } = config;
