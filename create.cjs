@@ -2,11 +2,11 @@ const fs = require('fs');
 const path = require('path');
 
 /**
- * node create.cjs [compName] [compFileName] [createType] [outputDirPath]
+ * node create.cjs [compName] [compFileName] [create-type] [outputDirPath]
  *
  * @param {!string} compName [Template] - 组件名
  * @param {!string} compFileName [template] - 组件文件名
- * @param {comp | customComp | hook} createType [comp] - 创建类型
+ * @param {comp | customComp | hook | string} createType [comp] - 创建类型
  * @param {?string} outputPath - 输出路径( 基于 lib 为根路径 )
  *  - comp -> /lib/components
  *  - custom-comp -> /lib/components
@@ -57,9 +57,11 @@ const tempFullPath = path.resolve(__dirname, `${baseTempsDirPath}/__${createType
 /** 根据创建类型更新初始化配置 */
 if (createType && fs.existsSync(tempFullPath)) {
   targetTempDirPath = tempFullPath;
+  /** 如果有自定义输出目录则使用自定义 */
   if (typeof outputPath === 'string' && outputPath.length) {
     outputDirPath = path.resolve(__dirname, './lib' + outputPath);
   } else {
+    /** 如果没有自定义目录则使用预先定义的 */
     if ([CreateTypes.comp, CreateTypes.customComp].includes(createType)) {
       outputDirPath = path.resolve(__dirname, './lib/components');
     } else if (createType === CreateTypes.hook) {
