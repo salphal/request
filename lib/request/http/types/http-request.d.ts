@@ -32,7 +32,7 @@ export interface IBaseRequest<T, C> {
   beforeRequest?: (config: C) => any;
 
   /** 请求方法 */
-  request<T = any, R = IHttpResponse<T>, D = any>(config: IBaseRequestConfig<D>): Promise<R>;
+  request<T = any, R = IHttpResponse<T>, D = any>(config: C<D>): Promise<R>;
 
   /** 请求适配器( 根据不同环境使用不同 API 发起请求 ) */
   requestAdapter?: (config: C) => any;
@@ -79,8 +79,6 @@ export interface IGraphqlData<D> {
 }
 
 export interface IHttpRequest<C> {
-  request: <T>(config: C) => Promise<T>;
-
   get<T = any, R = IHttpResponse<T>, P = any>(
     url: string,
     params?: P,
