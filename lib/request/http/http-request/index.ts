@@ -27,6 +27,8 @@ class HttpBaseRequest implements IBaseRequest<AxiosInstance, IBaseRequestConfig>
   cacheStore: CacheStore;
   /** 请求实例公共配置 */
   config: IBaseRequestConfig;
+  /** 执行上下文 */
+  context: any;
   /** 请求拦截器列表 */
   requestInterceptorList: RequestInterceptorList;
   /** 响应拦截器列表 */
