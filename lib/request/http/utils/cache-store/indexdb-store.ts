@@ -1,12 +1,5 @@
 import type { CacheStore } from '@lib/request/http/types/cache-store';
-import { type DBTables, TsIndexDB } from '@lib/request/http/utils/indexdb';
-
-export interface IndexDBStormProps {
-  dbName?: string;
-  version?: number;
-  tables?: DBTables[];
-  tableName?: string;
-}
+import { TsIndexDB } from '@lib/request/http/utils/indexdb';
 
 class IndexDBStore implements CacheStore {
   store: TsIndexDB;
