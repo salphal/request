@@ -21,7 +21,7 @@ const request = new HttpRequest({
     pendingResponseInterceptors, // 重复请求响应拦截器
     loadingResponseInterceptors, // loading 响应拦截器
     retryResponseInterceptors, // 重试错误请求( 默认重试3次 )
-    cacheResponseInterceptors, // 缓存成功的请求结果
+    cacheResponseInterceptors, // 缓存成功的请求结果, 并在 beforeRequest 中判断是否有效并返回
   ],
   cacheStore: new IndexDBStore(),
 });
