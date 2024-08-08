@@ -20,6 +20,8 @@ export interface IBaseRequest<T, C> {
   instance: T;
   /** 请求配置对象 */
   config: C;
+  /** 执行上下文 */
+  context: any;
   /** 缓存数据的仓库 */
   cacheStore?: CacheStore | null;
 
@@ -168,8 +170,6 @@ export interface CacheInterceptorConfig {
   cacheName?: string;
   /** 缓存类型 */
   cacheType?: CacheType;
-  /** 创建缓存数据的仓库 */
-  createCacheStore?: () => CacheStore;
   /** 缓存时间( ms) */
   validityPeriod?: number;
 }
