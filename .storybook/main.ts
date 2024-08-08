@@ -9,6 +9,7 @@ const config: StorybookConfig = {
     '@storybook/addon-actions',
     '@chromatic-com/storybook',
     '@storybook/addon-actions/register',
+    '@storybook/addon-storysource',
   ],
 
   framework: {
