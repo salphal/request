@@ -9,6 +9,13 @@ export const ConsolePreviewStory = React.forwardRef<
 >(({ ...rest }, ref) => {
   const props = { ...rest };
 
+  console.log('test_log');
+  console.log('test_log');
+  console.log('test_log');
+  console.info('test_info');
+  console.warn('test_warn');
+  console.error('test_error');
+
   return (
     <div className="story-wrap">
       <ConsolePreview

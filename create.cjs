@@ -50,6 +50,7 @@ const replacements = {
   CompName: capitalizeFirstLetter(compName),
   compName: lowercaseFirstLetter(compName),
   'comp-file-name': compPath || 'template',
+  CreateType: capitalizeFirstLetter(createType),
 };
 
 const tempFullPath = path.resolve(__dirname, `${baseTempsDirPath}/__${createType}__`);
