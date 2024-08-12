@@ -1,3 +1,5 @@
+export type CacheType = 'indexDB' | 'map' | 'localStorage' | 'custom';
+
 export interface CacheData {
   /** 根据请求配置对象生成的唯一标识 */
   token: string;

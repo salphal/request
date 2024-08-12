@@ -1,4 +1,4 @@
-import { CacheStore } from '@lib/request/http/types/cache-store';
+import { CacheStore, CacheType } from '@lib/request/http/types/cache-store';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 export type RequestInterceptors<C, I> = [

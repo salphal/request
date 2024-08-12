@@ -130,7 +130,7 @@ class HttpBaseRequest implements IBaseRequest<AxiosInstance, IBaseRequestConfig>
 class HttpRequest extends HttpBaseRequest implements IHttpRequest<IHttpRequestConfig> {
   constructor(config: IHttpRequestConfig) {
     super({
-      // setLoading: (loading: boolean) => loading,
+      setLoading: (loading: boolean) => loading,
       ignoreLoading: false,
       loadingType: 'single',
 
@@ -143,8 +143,6 @@ class HttpRequest extends HttpBaseRequest implements IHttpRequest<IHttpRequestCo
 
       cacheAble: false,
       validityPeriod: 86400 * 3,
-      cacheType: 'localStorage',
-      cacheName: 'requestCacheStorage',
 
       // requestInterceptorList: [],
       // responseInterceptorList: [],
@@ -266,4 +264,4 @@ class HttpRequest extends HttpBaseRequest implements IHttpRequest<IHttpRequestCo
   }
 }
 
-export { HttpBaseRequest, HttpRequest };
+export { HttpBaseRequest, HttpRequest as default };

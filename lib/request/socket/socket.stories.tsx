@@ -3,7 +3,7 @@ import Socket, { type SocketProps } from './socket';
 import { SocketStory } from './socket.story';
 
 const meta = {
-  title: 'Components/Socket',
+  title: 'Request/Socket',
   component: SocketStory,
   // tags: ['autodocs'],
   parameters: {

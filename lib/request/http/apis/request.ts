@@ -1,4 +1,4 @@
-import { HttpRequest } from '@lib/request/http/http-request';
+import HttpRequest from '@lib/request/http/http-request';
 import IndexDBStore from '@lib/request/http/utils/cache-store/indexdb-store';
 import {
   loadingRequestInterceptors,

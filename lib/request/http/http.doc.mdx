@@ -20,29 +20,73 @@ import * as HttpStories from './http.stories';
 
 <Meta of={HttpStories} />
 
-<Title />
+<Title>HttpRequest</Title>
+
+```jsx
+import {
+  HttpRequest,
+  pendingRequestInterceptors,
+  loadingRequestInterceptors,
+  pendingResponseInterceptors,
+  loadingResponseInterceptors,
+  retryResponseInterceptors,
+  cacheResponseInterceptors,
+  IndexDBStore,
+} from '@alphal/request';
+
+const request = new HttpRequest({
+  baseURL: '/api',
+  requestInterceptorList: [
+    pendingRequestInterceptors, // 重复请求请求拦截器
+    loadingRequestInterceptors, // loading 请求拦截器
+  ],
+  responseInterceptorList: [
+    pendingResponseInterceptors, // 重复请求响应拦截器
+    loadingResponseInterceptors, // loading 响应拦截器
+    retryResponseInterceptors, // 重试错误请求( 默认重试3次 )
+    cacheResponseInterceptors, // 缓存成功的请求结果, 并在 beforeRequest 中判断是否有效并返回
+  ],
+  cacheStore: new IndexDBStore(), // 自定义缓存工具类( 必须继承 CacheStore 接口 )
+});
+
+export default request;
+```
 
 <Description />
 
-<Primary />
+<Subtitle>Loading Interceptor Params</Subtitle>
 
-<Controls />
+<Controls include={['setLoading', 'ignoreLoading', 'loadingType']} />
 
-<Subheading>Usage</Subheading>
+<Subtitle>Pending Interceptor Params</Subtitle>
 
-<Source
-  language="tsx"
-  code={`
-`}
-/>
+<Controls include={['abortAble']} />
 
-<Subheading>Default Http</Subheading>
+<Subtitle>Retry Interceptor Params</Subtitle>
 
-<Canvas of={HttpStories.DefaultHttp} />
+<Controls include={['retryAble', 'retryDelay', 'retryMaxCount']} />
 
-<Subheading>Another Http</Subheading>
+<Subtitle>Cache Interceptor Params</Subtitle>
 
-<Canvas of={HttpStories.AnotherHttp} />
+<Controls include={['cacheAble', 'validityPeriod']} />
+
+<Subheading>Examples</Subheading>
+
+<Subheading>LoadingInterceptor</Subheading>
+
+<Canvas of={HttpStories.LoadingInterceptor} />
+
+<Subheading>PendingInterceptor</Subheading>
+
+<Canvas of={HttpStories.PendingInterceptor} />
+
+<Subheading>RetryInterceptor</Subheading>
+
+<Canvas of={HttpStories.RetryInterceptor} />
+
+<Subheading>CacheInterceptor</Subheading>
+
+<Canvas of={HttpStories.CacheInterceptor} />
 
 <style>
   {`
