@@ -1,0 +1,39 @@
+.preview-console-aside-menu.ant-menu {
+  padding-top: 6px;
+
+  .ant-menu-item {
+    height: 28px;
+    box-sizing: border-box;
+
+    &.ant-menu-item-selected,
+    &:hover {
+      border-radius: 4px;
+    }
+
+    > span {
+      height: 28px;
+      line-height: 28px;
+      font-size: 12px;
+    }
+  }
+}
+
+.console-msg {
+
+  &-info {
+    color: #69b1ff;
+    background-color: #e6f4ff;
+  }
+
+  &-warn {
+    color: #fa8c16;
+    background-color: #fff7e6;
+  }
+
+  &-error {
+    color: #ff7875;
+    background-color: #fff1f0;
+  }
+}
+
+
