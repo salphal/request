@@ -1,3 +1,3 @@
-import ConsolePreview from "./console-preview";
+import ConsolePreview from './console-preview';
 
 export default ConsolePreview;

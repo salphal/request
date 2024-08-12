@@ -1,31 +1,23 @@
 import React from 'react';
-import ConsolePreview, {type ConsolePreviewProps} from "./console-preview";
+import ConsolePreview, { type ConsolePreviewProps } from './console-preview';
 
-export interface ConsolePreviewStoryProps {
-}
+export interface ConsolePreviewStoryProps {}
 
-export const ConsolePreviewStory = React.forwardRef<any, ConsolePreviewStoryProps & ConsolePreviewProps>(
-  (
-    {
-      ...rest
-    },
-    ref,
-  ) => {
+export const ConsolePreviewStory = React.forwardRef<
+  any,
+  ConsolePreviewStoryProps & ConsolePreviewProps
+>(({ ...rest }, ref) => {
+  const props = { ...rest };
 
-    const props = { ...rest };
-
-    return (
-      <div className="story-wrap">
-        <ConsolePreview
-          ref={ref}
-          {...props}
-        />
-      </div>
-
-    );
-  },
-);
-
+  return (
+    <div className="story-wrap">
+      <ConsolePreview
+        ref={ref}
+        {...props}
+      />
+    </div>
+  );
+});
 
 ConsolePreviewStory.displayName = 'ConsolePreviewStory';
 

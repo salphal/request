@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import ConsolePreview, { type ConsolePreviewProps } from "./console-preview";
+import ConsolePreview, { type ConsolePreviewProps } from './console-preview';
 import { ConsolePreviewStory } from './console-preview.story';
-
 
 const meta = {
   title: 'Components/ConsolePreview',
@@ -13,28 +12,23 @@ const meta = {
       toc: true,
     },
   },
-  args: {
-  },
-  argTypes: {
-  },
+  args: {},
+  argTypes: {},
 } satisfies Meta<typeof ConsolePreview>;
-
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-
-const defaultProps: ConsolePreviewProps = {
-};
+const defaultProps: ConsolePreviewProps = {};
 
 export const DefaultConsolePreview: Story = {
   args: {
-    ...defaultProps
-  }
+    ...defaultProps,
+  },
 };
 
 export const AnotherConsolePreview: Story = {
   args: {
-    ...defaultProps
-  }
+    ...defaultProps,
+  },
 };
