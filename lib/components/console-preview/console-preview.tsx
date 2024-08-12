@@ -87,12 +87,6 @@ const ConsolePreview: ForwardRefRenderFunction<ConsolePreviewRef, ConsolePreview
       setMessageList((p: Array<string>) => [...p, message]);
       originalConsoleError.apply(console, [message, ...restArgs]);
     };
-    console.log('test_log');
-    console.log('test_log');
-    console.log('test_log');
-    console.info('test_info');
-    console.warn('test_warn');
-    console.error('test_error');
   }, []);
 
   return (
@@ -125,6 +119,7 @@ const ConsolePreview: ForwardRefRenderFunction<ConsolePreviewRef, ConsolePreview
               icon={<StopOutlined />}
               size={'small'}
               onClick={() => {
+                setMessageList([]);
                 setInfoList([]);
                 setWarnList([]);
                 setErrorList([]);
