@@ -20,7 +20,7 @@ const retryRequest = (err: any, instance: AxiosInstance) => {
   config.retryCount += 1;
 
   const delay = new Promise<void>((resolve) => {
-    console.log(
+    console.error(
       `请求失败: ( 可以通过 retryAble: false 禁用 ), 重新请求 ${config['retryCount']} 次: ${config['url']}`,
     );
     setTimeout(() => {
