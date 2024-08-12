@@ -52,6 +52,11 @@ const meta = {
    * https://storybook.js.org/docs/api/arg-types#controltype
    */
   argTypes: {
+    func: {
+      type: 'function',
+      description: '',
+    },
+
     string: {
       type: 'string',
       control: {
