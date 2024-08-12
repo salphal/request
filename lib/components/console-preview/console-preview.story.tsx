@@ -6,16 +6,8 @@ export interface ConsolePreviewStoryProps {}
 export const ConsolePreviewStory = React.forwardRef<
   any,
   ConsolePreviewStoryProps & ConsolePreviewProps
->(({ ...rest }, ref) => {
-  const props = { ...rest };
-
-  console.log('test_log');
-  console.log('test_log');
-  console.log('test_log');
-  console.info('test_info');
-  console.warn('test_warn');
-  console.error('test_error');
-
+>(({ height = 300, ...rest }, ref) => {
+  const props = { height, ...rest };
   return (
     <div className="story-wrap">
       <ConsolePreview
