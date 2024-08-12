@@ -22,6 +22,7 @@ import { previewConsoleAsideConfig } from '@lib/components/console-preview/const
 import classNames from 'classnames';
 
 export interface ConsolePreviewProps {
+  /** 控制台高度( 默认: 300 ) */
   height?: number;
 }
 
@@ -55,7 +56,15 @@ const ConsolePreview: ForwardRefRenderFunction<ConsolePreviewRef, ConsolePreview
       } else {
         result = messageList;
       }
-      return result.filter((v) => v.indexOf(query) !== -1);
+      return result
+        .map((v) => {
+          if (typeof v === 'object') {
+            return JSON.stringify(v);
+          } else {
+            return String(v);
+          }
+        })
+        .filter((v) => v.indexOf(query) !== -1);
     },
     [level, query, messageList, infoList, warnList, errorList],
   );
@@ -92,20 +101,25 @@ const ConsolePreview: ForwardRefRenderFunction<ConsolePreviewRef, ConsolePreview
   return (
     <React.Fragment>
       <div
-        className={'console-preview w-full h-full'}
+        className={'console-preview'}
         style={{
           border: '1px solid #ccc',
           borderRadius: '4px',
+          height: '100%',
         }}
       >
         <div
-          className={'console-preview-header flex flex-row justify-between items-center'}
+          className={'console-preview-header'}
           style={{
             padding: '0 12px',
+            display: 'flex',
+            flexFlow: 'row nowrap',
+            justifyContent: 'space-between',
+            alignItems: 'center',
             backgroundColor: '#eee',
             height: '40px',
             lineHeight: '40px',
-            borderBottom: '1px solid #ccc',
+            borderBottom: '1px solid #f0f0f0',
           }}
         >
           <span className={'console-preview-header-left'}>
@@ -127,7 +141,10 @@ const ConsolePreview: ForwardRefRenderFunction<ConsolePreviewRef, ConsolePreview
               }}
             />
           </span>
-          <span className={'flex-1 px-3'}>
+          <span
+            className={'console-preview-header-center'}
+            style={{ flex: 1, padding: '0 10px' }}
+          >
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -155,14 +172,21 @@ const ConsolePreview: ForwardRefRenderFunction<ConsolePreviewRef, ConsolePreview
           </span>
         </div>
         <div
-          className={'console-preview-content flex flex-row justify-between'}
+          className={'console-preview-content'}
           style={{
+            display: 'flex',
+            flexFlow: 'row nowrap',
+            justifyContent: 'space-between',
+            alignItems: 'center',
             height: height || 'auto',
             overflow: 'hidden',
             color: '#333',
           }}
         >
-          <div className={'preview-content-aside h-full'}>
+          <div
+            className={'preview-content-aside'}
+            style={{ height: '100%' }}
+          >
             {showAsideMenu && (
               <Menu
                 selectedKeys={[level]}
@@ -172,15 +196,21 @@ const ConsolePreview: ForwardRefRenderFunction<ConsolePreviewRef, ConsolePreview
                 }}
                 mode="inline"
                 items={previewConsoleAsideConfig}
-                style={{ width: '180px', borderRightColor: 'rgba(5, 5, 5, 0.1)' }}
+                style={{
+                  width: '180px',
+                  height: '100%',
+                  borderRightColor: 'rgba(5, 5, 5, 0.1)',
+                }}
               />
             )}
           </div>
           <div
-            className={'preview-content-messages flex-1 h-full'}
+            className={'preview-content-messages'}
             style={{
+              flex: 1,
               padding: '12px',
               overflow: 'hidden auto',
+              height: '100%',
             }}
           >
             {listDataSource().length ? (
@@ -207,7 +237,10 @@ const ConsolePreview: ForwardRefRenderFunction<ConsolePreviewRef, ConsolePreview
                 size={'small'}
               />
             ) : (
-              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description={'no console'}
+              />
             )}
           </div>
         </div>
