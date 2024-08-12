@@ -4,7 +4,7 @@ import { ${CompName}Story } from './${comp-file-name}.story';
 
 
 const meta = {
-  title: 'Components/${CompName}',
+  title: '${CreateType}/${CompName}',
   component: ${CompName}Story,
   // tags: ['autodocs'],
   parameters: {
