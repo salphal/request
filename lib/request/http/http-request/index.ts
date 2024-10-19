@@ -20,7 +20,7 @@ import { createTokenByConfig } from '@lib/request/http/utils/token.ts';
  * https://github.com/git-lt/axios-ext
  */
 
-class HttpBaseRequest implements IBaseRequest<AxiosInstance, IBaseRequestConfig> {
+export class HttpBaseRequest implements IBaseRequest<AxiosInstance, IBaseRequestConfig> {
   /** 请求实例 */
   instance: AxiosInstance;
   /** 缓存仓库( 默认使用 indexDB ) */
@@ -127,7 +127,7 @@ class HttpBaseRequest implements IBaseRequest<AxiosInstance, IBaseRequestConfig>
   }
 }
 
-class HttpRequest extends HttpBaseRequest implements IHttpRequest<IHttpRequestConfig> {
+export class HttpRequest extends HttpBaseRequest implements IHttpRequest<IHttpRequestConfig> {
   constructor(config: IHttpRequestConfig) {
     super({
       setLoading: (loading: boolean) => loading,
@@ -263,5 +263,3 @@ class HttpRequest extends HttpBaseRequest implements IHttpRequest<IHttpRequestCo
     return this.request(newConfig);
   }
 }
-
-export { HttpBaseRequest, HttpRequest as default };

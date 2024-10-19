@@ -1,6 +1,6 @@
 type MessageHandler = (data: string) => void;
 
-class SocketRequest {
+export class SocketRequest {
   private socket: WebSocket | null = null;
 
   private messageHandlers: MessageHandler[] = [];
@@ -42,5 +42,3 @@ class SocketRequest {
     }
   }
 }
-
-export default SocketRequest;

@@ -1,6 +1,28 @@
 import './global.css';
 
-import HttpRequest from '@lib/request/http/http-request';
-import SocketRequest from '@lib/request/socket/socket-request';
+import { HttpBaseRequest, HttpRequest } from '@lib/request/http/http-request';
+import { SocketRequest } from '@lib/request/socket/socket-request';
+import {
+  cacheRequestInterceptors,
+  cacheResponseInterceptors,
+  loadingRequestInterceptors,
+  loadingResponseInterceptors,
+  pendingRequestInterceptors,
+  pendingResponseInterceptors,
+  retryRequestInterceptors,
+  retryResponseInterceptors,
+} from '@lib/request/http/interceptors';
 
-export { HttpRequest, SocketRequest };
+export {
+  HttpBaseRequest,
+  HttpRequest,
+  SocketRequest,
+  cacheRequestInterceptors,
+  cacheResponseInterceptors,
+  loadingRequestInterceptors,
+  loadingResponseInterceptors,
+  pendingRequestInterceptors,
+  pendingResponseInterceptors,
+  retryRequestInterceptors,
+  retryResponseInterceptors,
+};
